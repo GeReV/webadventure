@@ -6,4 +6,6 @@ define(function() {
     
     run: function() {}
   });
+  
+  return Game;
 });

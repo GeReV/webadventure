@@ -4,7 +4,11 @@ define(function() {
       
     },
     
-    run: function() {}
+    run: function() {},
+    
+    getTime: function() {
+      return Game.localTime;
+    }
   });
   
   return Game;

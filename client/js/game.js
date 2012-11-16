@@ -1,50 +1,54 @@
-define(["render", "world"], function() {
+define(["renderer", "entity"], function(Renderer, Entity) {
     
   var Game = Class.extend({
     init: function() {
-      this.initRender(document.getElementById("canvas"));
-      this.initWorld();
+      this.initRenderer(document.getElementById("canvas"));
+      this.entities = [];
+      this.fps = 30;
     },
         
-    initWorld: function() {
-      this.world = new World();
-    },
-    
-    initRender: function(canvas) {
-      this.render = new Render(canvas);
+    initRenderer: function(canvas) {
+      this.renderer = new Renderer(canvas);
     },
     
     draw: function(interpolation) {
-      this.render.render(this.world.entities);
+      this.renderer.clear();
+      
+      for (var i = 0, entitiy; entitiy = this.entities[i]; i++)
+        this.renderer.render(entity);
+        
+      this.renderer.render(new Entity(null, 5,5,92,92)); // remove later
     },
     
     update: function (timediff) {
-      this.world.update(timediff);
+      
     },
     
     run: function() {
-      var loops = 0, skipTicks = 1000 / Game.fps,
-        maxFrameSkip = 10,
-        nextGameTick = Game.localTime = window.perfNow(),
-        lastGameTick,   
-        tick = function() {
-          loops = 0;
-      
-          while (window.perfNow() > nextGameTick) {
-            Game.update();
-            nextGameTick += skipTicks;
-            loops++;
-          }
-      
-          if (!loops) {
-            Game.draw((nextGameTick - window.perfNow()) / skipTicks);
-          } else {
-            Game.draw(0);
-          }
-          
-          window.requestAnimationFrame(tick);
-        };
+      var loops = 0, 
+          skipTicks = 1000 / this.fps,
+          maxFrameSkip = 10,
+          nextGameTick = Game.localTime = window.perfNow(),
+          lastGameTick,
+          that = this,
+          tick = function() {
+            loops = 0;
         
+            while (window.perfNow() > nextGameTick) {
+              that.update();
+              nextGameTick += skipTicks;
+              loops++;
+            }
+        
+            if (!loops) {
+              that.draw((nextGameTick - window.perfNow()) / skipTicks);
+            } else {
+              that.draw(0);
+            }
+            
+            window.requestAnimationFrame(tick);
+          };
+          
       window.requestAnimationFrame(tick);
     },
 

@@ -1,8 +1,12 @@
 define(['sprite'], function(Sprite) {
   var Entity = Sprite.extend({
     init: function(img, x, y, width, height, opacity) {
-      Sprite.prototype.init.call(this);
-      
+      this.img = img;
+      this.x = +x || 0;
+      this.y = +y || 0;
+      this.width = +width || 0;
+      this.height = +height || 0;
+      this.opacity = +opacity || 1;
       this.alive = true;
     },
     
@@ -30,4 +34,6 @@ define(['sprite'], function(Sprite) {
       return Math.sqrt(distX * distX + distY * distY);
     },
   });
+  
+  return Entity;
 });

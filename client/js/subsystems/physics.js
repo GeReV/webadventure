@@ -1,7 +1,7 @@
 define(['core/entity'], function() {
   var Physics = Class.extend({
     init: function() {
-      
+      this.entities = [];
     },
     
     translate: function(entities) {

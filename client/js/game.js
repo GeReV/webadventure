@@ -1,17 +1,22 @@
-define(['subsystems/renderer', 'subsystems/physics', 'core/entity', 'entities/tilemap'], function(Renderer, Physics, Entity, TileMap) {
+define(['subsystems/renderer', 'subsystems/physics', 'core/entity', 'core/viewport', 'entities/tilemap'], function(Renderer, Physics, Entity, Viewport, TileMap) {
     
   var Game = Class.extend({
     init: function() {
-      this.initRenderer(document.getElementById('canvas'));
-      this.initPhysics();
+      var canvas = document.getElementById('canvas');
+      
       this.entities = [];
       this.fps = 30;
       
-      this.entities.push(new TileMap(50, 50));
+      this.tileMap = new TileMap(50, 50);
+      
+      this.viewport = new Viewport(canvas.width, canvas.height, this.tileMap.height * this.tileMap.tileHeight, this.tileMap.width * this.tileMap.tileWidth);
+      
+      this.initRenderer(canvas);
+      this.initPhysics();
     },
         
     initRenderer: function(canvas) {
-      this.renderer = new Renderer(canvas);
+      this.renderer = new Renderer(canvas, this.viewport);
     },
     
     initPhysics: function() {
@@ -19,10 +24,15 @@ define(['subsystems/renderer', 'subsystems/physics', 'core/entity', 'entities/ti
     },
     
     draw: function(interpolation) {
-      this.renderer.clear();
+      var renderer = this.renderer;
       
-      for (var i = 0, entity; entity = this.entities[i]; i++)
-        entity.render(this.renderer);
+      //renderer.clear();
+      
+      this.tileMap.render(renderer);
+      
+      for (var i = 0, entity; entity = this.entities[i]; i++) {
+        entity.render(renderer);
+      }
     },
     
     update: function () {

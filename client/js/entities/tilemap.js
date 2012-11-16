@@ -1,17 +1,26 @@
 define(['core/sprite', 'subsystems/resourcemanager'], function(Sprite, ResourceManager) {
   var TileMap = Class.extend({
-    init: function() {
+    init: function(width, height) {
       var that = this;
       
       //this.sprites = [];
-      this.map = [[0, 0, 0, 0, 0 ,0],[0, 0, 0, 0, 0 ,0],[0, 0, 0, 0, 0 ,0]];
+      this.map = [];
       this.sprites = [];
       
-      this.tileWidth = 32;
-      this.tileHeight = 32;
+      this.tileWidth = 40;
+      this.tileHeight = 40;
       
-      ResourceManager.add('img/grass.png', function(image) {
-        that.sprites.push(new Sprite(image, 0, 0, 32, 32));
+      this.width = +width || 18;
+      this.height = +height || 15;
+      
+      this._initMap();
+      
+      ResourceManager.add(['img/grass.png', 'img/rock.png'], function() {
+        for (var i=0, l=arguments.length; i<l; i++) {
+          var image = arguments[i];
+          
+          that.sprites.push(new Sprite(image, 0, 0, this.tileWidth, this.tileHeight));
+        }
       });
     },
     update: function() {
@@ -27,6 +36,14 @@ define(['core/sprite', 'subsystems/resourcemanager'], function(Sprite, ResourceM
           sprite = this.sprites[ this.map[i][j] ];
           
           sprite && renderer.render( sprite, i * tileW, j * tileH );
+        }
+      }
+    },
+    _initMap: function() {
+      for (var i=0; i<=this.width; i++) {
+        this.map[i] = [];
+        for (var j=0; j<=this.height; j++) {
+          this.map[i][j] = ((Math.random() * 3 >= 2) ? 1 : 0);
         }
       }
     }

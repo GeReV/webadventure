@@ -7,7 +7,7 @@ define(['subsystems/renderer', 'subsystems/physics', 'core/entity', 'entities/ti
       this.entities = [];
       this.fps = 30;
       
-      this.entities.push(new TileMap);
+      this.entities.push(new TileMap(50, 50));
     },
         
     initRenderer: function(canvas) {

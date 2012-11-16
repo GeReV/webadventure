@@ -1,26 +1,28 @@
-define(['renderer', 'physics', 'entity'], function(Renderer, Entity) {
+define(['subsystems/renderer', 'subsystems/physics', 'core/entity', 'entities/tilemap'], function(Renderer, Physics, Entity, TileMap) {
     
   var Game = Class.extend({
     init: function() {
       this.initRenderer(document.getElementById('canvas'));
-      this.initPhysix();
+      this.initPhysics();
       this.entities = [];
       this.fps = 30;
+      
+      this.entities.push(new TileMap);
     },
         
     initRenderer: function(canvas) {
       this.renderer = new Renderer(canvas);
     },
     
-    initphysics: function() {
+    initPhysics: function() {
       this.physics = new Physics();
     },
     
     draw: function(interpolation) {
       this.renderer.clear();
       
-      for (var i = 0, entitiy; entitiy = this.entities[i]; i++)
-        entity.render(renderer);
+      for (var i = 0, entity; entity = this.entities[i]; i++)
+        entity.render(this.renderer);
     },
     
     update: function () {

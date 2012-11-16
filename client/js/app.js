@@ -4,7 +4,7 @@ require.config({
   }
 });
 
-define(['bootstrap', 'vendor/class'], function() {
+define(['bootstrap', 'vendor/class', 'image'], function() {
   
   require(['game'], function(Game) {
     var game = new Game;

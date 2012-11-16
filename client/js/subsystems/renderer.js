@@ -1,4 +1,4 @@
-define(["entity"], function() {
+define(['core/entity'], function() {
   var Renderer = Class.extend({
     init: function(canvas) {
       this.height = canvas.height;
@@ -10,7 +10,7 @@ define(["entity"], function() {
     render: function(sprite, x, y) {
       x = x || 0;
       y = y || 0;
-      this.ctx.drawImage(sprite, x, y);
+      this.ctx.drawImage(sprite.img, x, y);
     }, 
     
     fillRect: function(x, y, w, h) {

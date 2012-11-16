@@ -7,9 +7,10 @@ define(["entity"], function() {
       this.ctx = canvas.getContext('2d');
     },
     
-    render: function(entity) {
-      //this.ctx.drawImage(entity.image, entity.x, entity.y);
-      this.fillRect(entity.x, entity.y, entity.width, entity.height);
+    render: function(sprite, x, y) {
+      x = x || 0;
+      y = y || 0;
+      this.ctx.drawImage(sprite, x, y);
     }, 
     
     fillRect: function(x, y, w, h) {

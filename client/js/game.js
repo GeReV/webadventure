@@ -1,8 +1,9 @@
-define(["renderer", "entity"], function(Renderer, Entity) {
+define(['renderer', 'physics', 'entity'], function(Renderer, Entity) {
     
   var Game = Class.extend({
     init: function() {
-      this.initRenderer(document.getElementById("canvas"));
+      this.initRenderer(document.getElementById('canvas'));
+      this.initPhysix();
       this.entities = [];
       this.fps = 30;
     },
@@ -11,17 +12,19 @@ define(["renderer", "entity"], function(Renderer, Entity) {
       this.renderer = new Renderer(canvas);
     },
     
+    initphysics: function() {
+      this.physics = new Physics();
+    },
+    
     draw: function(interpolation) {
       this.renderer.clear();
       
       for (var i = 0, entitiy; entitiy = this.entities[i]; i++)
-        this.renderer.render(entity);
-        
-      this.renderer.render(new Entity(null, 5,5,92,92)); // remove later
+        entity.render(renderer);
     },
     
-    update: function (timediff) {
-      
+    update: function () {
+      this.physics.translate(this.entities);
     },
     
     run: function() {

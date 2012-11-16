@@ -58,6 +58,14 @@ define(['core/sprite'], function(Sprite) {
       
     },
     
+    update: function() {
+      
+    },
+    
+    translate: function() {
+      
+    }
+    
   });
   
   return Entity;

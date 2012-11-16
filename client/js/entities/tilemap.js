@@ -62,6 +62,10 @@ define(['core/sprite', 'subsystems/resourcemanager'], function(Sprite, ResourceM
     
     isPassable: function(gridX, gridY) {
       return this.collisionMap[gridX][gridY] == 0;
+    },
+    
+    tilePassable: function(x, y) {
+      return this.isPassable(this.gridPositionFromXY(x, y));
     }
   });
   

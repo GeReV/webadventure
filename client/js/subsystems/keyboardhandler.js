@@ -12,12 +12,13 @@ define(['vendor/keyboard', 'game'], function(KeyboardState, Game) {
       for (var i=0, l=this.keys.length; i < l; i++) {
         if (this.keyboard.pressed(this.keys[i])) {
           input.push(this.keys[i]);
+          input[this.keys[i]] = true;
         }
       }
       
       var inputs = this.inputs = {
         keys: input,
-        time: Game.getTime(),
+        time: 000000,//Game.getTime(),
         sequence: ++this.sequence
       };
       
@@ -33,4 +34,6 @@ define(['vendor/keyboard', 'game'], function(KeyboardState, Game) {
           this.inputs.sequence;
     }
   });
+  
+  return KeyboardHandler;
 });

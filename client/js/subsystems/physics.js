@@ -5,7 +5,11 @@ define(['core/entity'], function() {
     },
     
     translate: function(entities) {
-
+      // TODO: addd collisionn  checks later
+      for (var i = 0, entity; entity = this.entities[i]; i++) {
+        // check collision before moving the entity
+        entity.gridPosition(entity.speed.x * entity.direction.x, entity.speed.y * entity.direction.y);
+      }
     }, 
   });
   

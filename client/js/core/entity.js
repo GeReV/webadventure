@@ -6,6 +6,7 @@ define(['core/sprite'], function(Sprite) {
       this.y = +y || 0;
       this.direction = new Vector(0,0);
       this.speed = new Vector(0,0);
+      this.isCollidable = true;
     },
     
     position: function(x, y) {
@@ -55,7 +56,8 @@ define(['core/sprite'], function(Sprite) {
     
     render: function() {
       
-    }
+    },
+    
   });
   
   return Entity;

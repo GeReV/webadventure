@@ -6,6 +6,7 @@ define(['core/sprite', 'subsystems/resourcemanager'], function(Sprite, ResourceM
       //this.sprites = [];
       this.map = [];
       this.sprites = [];
+      this.collisionMap = [];
       
       this.tileWidth = 40;
       this.tileHeight = 40;
@@ -46,6 +47,21 @@ define(['core/sprite', 'subsystems/resourcemanager'], function(Sprite, ResourceM
           this.map[i][j] = ((Math.random() * 3 >= 2) ? 1 : 0);
         }
       }
+      
+      for (var i=0; i<=this.width; i++) {
+        this.collisionMap[i] = [];
+        for (var j=0; j<=this.height; j++) {
+          this.collisionMap[i][j] = 0;
+        }
+      }
+    },
+    
+    gridPositionFromXY: function(x, y) {
+      return [Math.floor(x / this.tileWidth), Math.floor(y / this.tileHeight)];
+    },
+    
+    isPassable: function(gridX, gridY) {
+      return this.collisionMap[gridX][gridY] == 0;
     }
   });
   

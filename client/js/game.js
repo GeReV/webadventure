@@ -1,25 +1,31 @@
-define(['subsystems/renderer', 'subsystems/physics', 'core/entity', 'core/viewport', 'core/sprite', 'entities/tilemap', 'entities/player'], function(Renderer, Physics, Entity, Viewport, Sprite, TileMap, Player) {
+define(['subsystems/renderer', 'subsystems/physics', 'subsystems/resourcemanager', 'core/entity', 'core/viewport', 'core/sprite', 'entities/tilemap', 'entities/player'], function(Renderer, Physics, ResourceManager, Entity, Viewport, Sprite, TileMap, Player) {
   var Game = Class.extend({
     init: function() {
       var canvas = document.getElementById('canvas');
       this.fps = 30;
       
       this.entities = [];
-      this.entities.push(new Player(new Sprite(null, 10, 10), 0, 0, true));
       
       this.tileMap = new TileMap(50, 50);
       
       this.viewport = new Viewport(canvas.width, canvas.height, this.tileMap.height * this.tileMap.tileHeight, this.tileMap.width * this.tileMap.tileWidth);
       
-      this.initRenderer(canvas);
-      this.initPhysics();
+      this._initAssets();
+      this._initRenderer(canvas);
+      this._initPhysics();
     },
-        
-    initRenderer: function(canvas) {
+    _initAssets: function() {
+      var that = this;
+      
+      ResourceManager.add('img/crono.png', function(image) {
+        that.entities.push(new Player(new Sprite(image, image.width, image.height), 0, 0, true));
+      });
+    },
+    _initRenderer: function(canvas) {
       this.renderer = new Renderer(canvas, this.viewport);
     },
     
-    initPhysics: function() {
+    _initPhysics: function() {
       this.physics = new Physics();
       this.physics.tileMap = this.tileMap;
     },

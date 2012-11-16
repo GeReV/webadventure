@@ -45,7 +45,7 @@ define(['subsystems/keyboardhandler', 'entities/character', 'core/sprite', 'core
       
       renderer.viewport.center(this.x + this.width / 2, this.y + this.height / 2);
       
-      renderer.fillRect(this.x, this.y, this.width, this.height);
+      renderer.render(this.sprite, this.x, this.y);
     },
     
     translate: function(physics) {

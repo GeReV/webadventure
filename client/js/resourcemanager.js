@@ -40,5 +40,7 @@ define(function() {
     }
   });
   
-  return ResourceManager;
+  var resourcemanager = new ResourceManager;
+  
+  return resourcemanager;
 });

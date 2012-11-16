@@ -5,9 +5,21 @@ define(function() {
       this.callbacks = [];
     },
     connect: function() {
-      var socket = io.connect(this.url);
+      this.socket = io.connect(this.url);
       
-      socket.on('update', this.publish);
+      this.socket.on('connect', function() {});
+      this.socket.on('onconnected', this.onConnect);
+      this.socket.on('disconnect', this.onDisconnect);
+      this.socket.on('update', this.publish);
+    },
+    onConnect: function() {
+      
+    },
+    onDisconnect: function() {
+      
+    },
+    send: function(data) {
+      this.socket.send( JSON.stringify(data) );
     },
     publish: function(data) {
       var json = JSON.parse(data);

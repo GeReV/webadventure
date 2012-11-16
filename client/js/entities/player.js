@@ -4,6 +4,8 @@ define(['subsystems/keyboardhandler', 'entities/character', 'core/sprite', 'core
       this.sprite = sprite;
       this.x = +x || 0;
       this.y = +y || 0;
+      this.width = sprite.width;
+      this.height = sprite.height;
       this.direction = new Vector(0,0);
       this.speed = new Vector(5,5);
       
@@ -23,25 +25,38 @@ define(['subsystems/keyboardhandler', 'entities/character', 'core/sprite', 'core
     
     update: function() {
       var inputs = this.keyboardhandler.update();
+      this.direction.zero();
+      
       if(inputs.keys[this.keyBind.up])
-        this.direction.y = 1;
-      if(inputs.keys[this.keyBind.down])
         this.direction.y = -1;
+      if(inputs.keys[this.keyBind.down])
+        this.direction.y = 1;
         
       if(inputs.keys[this.keyBind.right])
-        this.direction.y = 1;
+        this.direction.x = 1;
       if(inputs.keys[this.keyBind.left])
-        this.direction.y = -1; 
+        this.direction.x = -1; 
         
       this.direction.normalize();
     },
     
     render: function(renderer) {
-      renderer.fillRect(0, 0, 10, 10);
+      var offset = renderer.viewport.offset();
+      
+      renderer.viewport.center(this.x + this.width / 2, this.y + this.height / 2);
+      
+      renderer.fillRect(this.x, this.y, this.width, this.height);
     },
     
     translate: function(physics) {
-      if(!physics.tileMap.tilePassable(this.x, this.y));
+      var deltaX = this.speed.x * this.direction.x,
+          deltaY = this.speed.y * this.direction.y;
+      
+      this.move(deltaX, deltaY);
+      
+      if(!physics.canMoveTo(this)) {
+        this.move(-deltaX, -deltaY);
+      }
     }
   });
   

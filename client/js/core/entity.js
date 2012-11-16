@@ -14,27 +14,18 @@ define(['core/sprite'], function(Sprite) {
         return [x, y];
       }
       
-      x && (this.x = x);
-      y && (this.y = y);
+      this.x = Math.max(x || 0, 0);
+      this.y = Math.max(y || 0, 0);
       
       return this;
+    },
+    
+    move: function(x, y) {
+      return this.position(this.x + x, this.y + y);
     },
     
     isAlive: function() {
       return !!this.alive;
-    },
-    
-    gridPosition: function(x, y) {
-      if (arguments.length <= 0) {
-        return [this.gridX, this.gridY];
-      }
-      
-      x && (this.gridX = x);
-      y && (this.gridY = y);
-    
-      this.position(x * 32, y * 32);
-      
-      return this;
     },
      
     distanceToEntity: function(entity) {
@@ -44,7 +35,7 @@ define(['core/sprite'], function(Sprite) {
       return Math.sqrt(distX * distX + distY * distY);
     },
     
-        invisible: function() {
+    invisible: function() {
       this.opacity = 0;
       
       return this;

@@ -30,10 +30,13 @@ define(['core/sprite', 'subsystems/resourcemanager'], function(Sprite, ResourceM
     render: function(renderer) {
       var sprite,
           tileW = this.tileWidth,
-          tileH = this.tileHeight;
+          tileH = this.tileHeight,
+          viewport = renderer.viewport.rect(),
+          tlTile = this.gridPositionFromXY(viewport[0], viewport[1]),
+          brTile = this.gridPositionFromXY(viewport[2], viewport[3]);
       
-      for (var i=0, l1=this.map.length; i<l1; i++) {
-        for (var j=0, l2=this.map[i].length; j<l2; j++) {
+      for (var i = tlTile[0], l1 = brTile[0]; i<=l1; i++) {
+        for (var j = tlTile[1], l2 = brTile[1]; j<=l2; j++) {
           sprite = this.sprites[ this.map[i][j] ];
           
           sprite && renderer.render( sprite, i * tileW, j * tileH );
@@ -64,8 +67,10 @@ define(['core/sprite', 'subsystems/resourcemanager'], function(Sprite, ResourceM
       return this.collisionMap[gridX][gridY] == 0;
     },
     
-    tilePassable: function(x, y) {
-      return this.isPassable(this.gridPositionFromXY(x, y));
+    isPassableByXY: function(x, y) {
+      var gridLocation = this.gridPositionFromXY(x, y);
+      
+      return this.isPassable(gridLocation[0], gridLocation[1]);
     }
   });
   

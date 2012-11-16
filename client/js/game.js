@@ -1,40 +1,46 @@
-define(['subsystems/renderer', 'subsystems/physics', 'core/entity', 'entities/tilemap', 'entities/player'], function(Renderer, Physics, Entity, TileMap, Player) {
-    
+define(['subsystems/renderer', 'subsystems/physics', 'core/entity', 'core/viewport', 'core/sprite', 'entities/tilemap', 'entities/player'], function(Renderer, Physics, Entity, Viewport, Sprite, TileMap, Player) {
   var Game = Class.extend({
     init: function() {
-      this.initRenderer(document.getElementById('canvas'));
-      this.initPhysics();
+      var canvas = document.getElementById('canvas');
       this.fps = 30;
       
       this.entities = [];
-      this.initializeAssets();
-    },
-    
-    initializeAssets: function() {
-      this.entities.push(new TileMap(50, 50));
-      this.entities.push(new Player(null, 0, 0, true));
+      this.entities.push(new Player(new Sprite(null, 10, 10), 0, 0, true));
+      
+      this.tileMap = new TileMap(50, 50);
+      
+      this.viewport = new Viewport(canvas.width, canvas.height, this.tileMap.height * this.tileMap.tileHeight, this.tileMap.width * this.tileMap.tileWidth);
+      
+      this.initRenderer(canvas);
+      this.initPhysics();
     },
         
     initRenderer: function(canvas) {
-      this.renderer = new Renderer(canvas);
+      this.renderer = new Renderer(canvas, this.viewport);
     },
     
     initPhysics: function() {
       this.physics = new Physics();
+      this.physics.tileMap = this.tileMap;
     },
     
     draw: function(interpolation) {
-      this.renderer.clear();
+      var renderer = this.renderer;
       
-      for (var i = 0, entity; entity = this.entities[i]; i++)
-        entity.render(this.renderer);
+      //renderer.clear();
+      
+      this.tileMap.render(renderer);
+      
+      for (var i = 0, entity; entity = this.entities[i]; i++) {
+        entity.render(renderer);
+      }
     },
     
     update: function () {
-      for (var i = 0, entity; entity = this.entities[i]; i++)
+      for (var i = 0, entity; entity = this.entities[i]; i++) {
         entity.update();
-        
-      this.physics.translate(this.entities);
+        entity.translate(this.physics);        
+      }
     },
     
     run: function() {

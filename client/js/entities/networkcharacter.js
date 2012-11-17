@@ -1,6 +1,6 @@
 define(['subsystems/keyboardhandler', 'entities/character', 'core/sprite', 'core/vector'], function(Keyboardhandler, Character, Sprite, Vector) {
   var NetworkCharacter = Character.extend({
-    init: function(sprite, x, y, isAlive) {
+    init: function(sprite, x, y, isAlive, id ) {
       this.sprite = sprite;
       this.x = +x || 0;
       this.y = +y || 0;
@@ -13,7 +13,7 @@ define(['subsystems/keyboardhandler', 'entities/character', 'core/sprite', 'core
       this.isAlive = isAlive;
       
       //network character     
-      this.networkID = "";
+      this.userId = id || '';
       this.nextPosition = new vector;
       this.timeStamp = 0;
       this.nextTimeStamp = 0;

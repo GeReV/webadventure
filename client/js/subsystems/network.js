@@ -1,7 +1,7 @@
 define(function() {
   var Network = Class.extend({
     init: function(host, port) {
-      this.url = "ws://"+ this.host +":"+ this.port +"/",
+      this.url = "ws://"+ host +":"+ port +"/",
       this.callbacks = [];
     },
     connect: function() {

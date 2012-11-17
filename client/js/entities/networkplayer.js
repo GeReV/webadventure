@@ -1,4 +1,4 @@
-define(['subsystems/keyboardhandler', 'entities/character', 'core/sprite', 'core/vector'], function(Keyboardhandler, Character, Sprite, Vector) {
+define(['subsystems/keyboardhandler', 'entities/character', 'core/sprite', 'core/vector', 'entities/player'], function(Keyboardhandler, Character, Sprite, Vector, Player) {
   var NetworkPlayer = Player.extend({
     init: function(sprite, x, y, isAlive) {
       this.sprite = sprite;
@@ -36,11 +36,18 @@ define(['subsystems/keyboardhandler', 'entities/character', 'core/sprite', 'core
       this.nextTimeStamp = networkData.timeStamp;
       
       // make sure server authorithed that movement
-      if(this.lastPosition != networkData.position)
-        this.position = networkData.position;  
+      if(this.lastPosition.x != networkData.position.x || this.lastPosition.y != networkData.position.y )
+        this.position(networkData.position.x, networkData.position.y);  
       
       this.lastPosition = this.position;
-      network.publish({id: this.userID, direction: this.diretion, timeStamp: window.perfNow()});
+      
+      console.log('sent server:' + this.position());
+      network.send({ 
+        position: this.position(),
+      });
+      // network.send({ 
+        // direction: this.diretion,
+      // });
     },
     
     

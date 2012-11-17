@@ -85,12 +85,8 @@ define([
         player.x = data.position.x;
         player.y = data.position.y;
       });
-<<<<<<< HEAD
-      
-      //network.connect();
-=======
 
->>>>>>> 7db47a8a299160c77c382f435b9dd7f42041c016
+      //network.connect();
     },
     
     _addNetworkPlayer: function(userId) {

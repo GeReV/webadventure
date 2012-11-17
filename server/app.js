@@ -10,7 +10,7 @@ var gameport = process.env.PORT || 4004,
     express = require('express'),
     UUID = require('node-uuid'),
     verbose = false,
-    app = express.createServer();
+    app = express();
 
 /* Express server set up. */
 
@@ -26,11 +26,28 @@ app.listen(gameport);
 console.log('\t :: Express :: Listening on port ' + gameport);
 
 //By default, we forward the / path to index.html automatically.
-app.get('/', function(req, res) {
+/*app.get('/', function(req, res) {
   //res.sendfile( __dirname + '/simplest.html' );
-});
+});*/
 //This handler will listen for requests on /*, any file from the root of our server.
 //See expressjs documentation for more info on routing.
+
+app.options('*', function(req, res){
+  console.log("writing headers only");
+  res.header("Access-Control-Allow-Origin", "*");
+  /*res.header("Access-Control-Allow-Credentials", true);
+  res.header("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Content-Type");*/
+  res.end('');
+});
+
+app.get('/socket.io/1/*', function(req, res) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Credentials", true);
+  res.writeHead(200, { 'Content-Type': 'application/javascript'});
+  res.write('io.j[0]("1234567890:15:25:websocket,flashsocket,htmlfile,xhr-polling,jsonp-polling");');
+  res.end('');
+});
 
 app.get('/*', function(req, res, next) {
 
@@ -42,7 +59,7 @@ app.get('/*', function(req, res, next) {
     console.log('\t :: Express :: file requested : ' + file);
 
   //Send the requesting client the file.
-  res.sendfile(__dirname + '/' + file);
+  res.sendfile(__dirname + '../client/' + file);
 
 });
 //app.get *
@@ -51,7 +68,7 @@ app.get('/*', function(req, res, next) {
 //This way, when the client requests '/socket.io/' files, socket.io determines what the client needs.
 
 //Create a socket.io instance using our express server
-var sio = io.listen(app),
+var sio = io.listen(),
     clients = {};
 
 //Configure the socket.io connection settings.

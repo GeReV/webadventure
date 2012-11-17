@@ -22,8 +22,6 @@ define(function() {
       this.socket.emit('update', data);
     },
     publish: function(data) {
-      console.log(data);
-      
       for (var i=0, l=this.callbacks.length; i < l; i++) {
         this.callbacks[i](data);
       }

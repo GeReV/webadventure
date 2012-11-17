@@ -14,29 +14,25 @@ define([
   var Game = Class.extend({
     init: function() {
       var canvas = document.getElementById('canvas');
+      
       this.fps = 30;
       
       this.entities = [];
       
-      this.tileMap = new TileMap(50, 50);
-      
-      this.viewport = new Viewport(canvas.width, canvas.height, this.tileMap.height * this.tileMap.tileHeight, this.tileMap.width * this.tileMap.tileWidth);
-      
-      this._initAssets();
-      this._initRenderer(canvas);
-      this._initPhysics();
-      this._initNetwork();
     },
-    _initAssets: function() {
-      var that = this;
-      
-      ResourceManager.add('img/crono.png', function(image) {
-        that.player = new NetworkPlayer(new Sprite(image, image.width, image.height), 0, 0, true);
-        that.entities.push(that.player);
-        
-        that.network.connect();
-      });
+    
+    _initAssets: function(callback) {
+      ResourceManager.add(['img/grass.png', 'img/rock.png', 'img/crono.png', 'img/friend.png'], callback.bind(this));
     },
+    
+    _initPlayer: function() {
+      var image = ResourceManager.get('crono.png'),
+          sprite = new Sprite(image, image.width, image.height);
+      
+      this.player = new NetworkPlayer(sprite, 0, 0);
+      this.entities.push(this.player);
+    },
+    
     _initRenderer: function(canvas) {
       this.renderer = new Renderer(canvas, this.viewport);
     },
@@ -47,50 +43,50 @@ define([
     },
     
     _initNetwork: function() {
-      var that = this,
-          network;
+      var network;
       
       this.clients = {};
       
       this.network = network = new Network('10.0.0.169', 4004);
       
-      network.onConnect = function(data) {
+      network.onConnect = (function(data) {
         
-        that.player.userId = data.id;
+        this.player.userId = data.id;
         
         // Add the connected clients.
         for (var i=0, l=data.clients.length; i < l; i++) {
-          that._addNetworkPlayer.call(that, data.clients[i]);
+          this._addNetworkPlayer(data.clients[i]);
         }
-      };
+      }).bind(this);
       
-      network.onClientConnected = function(userId) {
-        that._addNetworkPlayer.call(that, userId);
-      };
+      network.onClientConnected = (function(userId) {
+        this._addNetworkPlayer(userId);
+      }).bind(this);
       
-      network.onClientDisconnected = function(userId) {
-        var player = that.clients[userId];
+      network.onClientDisconnected = (function(userId) {
+        var player = this.clients[userId];
         
-        delete that.clients[userId];
+        delete this.clients[userId];
         
-        var i = that.entities.indexOf(player);
+        var i = this.entities.indexOf(player);
         
-        that.entities.splice(i, 1); // Remove player from the entities.
-      };
+        this.entities.splice(i, 1); // Remove player from the entities.
+      }).bind(this);
       
-      network.subscribe(function(data) {
+      network.subscribe( (function(data) {
         var userId = data.userid,
-            player = that.clients[userId];
+            player = this.clients[userId];
             
         player.x = data.position[0];
         player.y = data.position[1];
-      });
+      }).bind(this) );
 
-      //network.connect();
+      network.connect();
     },
     
     _addNetworkPlayer: function(userId) {
-      var player = new NetworkCharacter(this.player.sprite, 0,0, true, userId); // Set this to a new NetworkPlayer or whatever.
+      var sprite = new Sprite( ResourceManager.get('friend.png') ),
+          player = new NetworkCharacter(sprite, 0,0, true, userId); // Set this to a new NetworkPlayer or whatever.
         
       this.clients[userId] = player;
       
@@ -115,6 +111,21 @@ define([
         entity.update();
         entity.translate(this.physics);        
       }
+    },
+    
+    start: function() {
+      this._initAssets(function() {
+        this.tileMap = new TileMap(50, 50);
+      
+        this.viewport = new Viewport(canvas.width, canvas.height, this.tileMap.height * this.tileMap.tileHeight, this.tileMap.width * this.tileMap.tileWidth);
+        
+        this._initPlayer();
+        this._initRenderer(canvas);
+        this._initPhysics();
+        this._initNetwork();
+        
+        this.run();
+      });
     },
     
     run: function() {

@@ -10,7 +10,7 @@ define(['subsystems/keyboardhandler', 'entities/character', 'core/sprite', 'core
       this.speed = new Vector(5,5);
       
       // chareacter
-      this.isAlive = isAlive;
+      this.isAlive = isAlive || true;
       
       //player
       this.keyBind = {up: 'w', down: 's', left: 'a', right: 'd'}

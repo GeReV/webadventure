@@ -14,11 +14,11 @@ define(['subsystems/keyboardhandler', 'entities/character', 'core/sprite', 'core
       
       //network character     
       this.userId = id || '';
-      this.nextPosition = new vector;
+      this.nextPosition = new Vector;
       this.timeStamp = 0;
       this.nextTimeStamp = 0;
-      this.direction = new vector;
-      this.nextDirection = new vector;
+      this.direction = new Vector;
+      this.nextDirection = new Vector;
     },
     
     networkUpdate: function(network) {

@@ -31,8 +31,10 @@ define([
       var that = this;
       
       ResourceManager.add('img/crono.png', function(image) {
-        that.player = new Player(new Sprite(image, image.width, image.height), 0, 0, true);
+        that.player = new NetworkPlayer(new Sprite(image, image.width, image.height), 0, 0, true);
         that.entities.push(that.player);
+        
+        that.network.connect();
       });
     },
     _initRenderer: function(canvas) {
@@ -84,7 +86,7 @@ define([
         player.y = data.position.y;
       });
       
-      network.connect();
+      //network.connect();
     },
     
     _addNetworkPlayer: function(userId) {

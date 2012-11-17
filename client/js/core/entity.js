@@ -46,7 +46,7 @@ define(['core/sprite'], function(Sprite) {
     },
     
     render: function() {
-      
+      renderer.render(this.sprite, this.x, this.y);
     },
     
     update: function() {

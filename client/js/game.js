@@ -82,8 +82,8 @@ define([
         var userId = data.userid,
             player = that.clients[userId];
             
-        player.x = data.position.x;
-        player.y = data.position.y;
+        player.x = data.position[0];
+        player.y = data.position[1];
       });
 
       //network.connect();

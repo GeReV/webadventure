@@ -35,8 +35,16 @@ define(function() {
     add: function(resource, callback) {
       this._load(resource, callback);
     },
-    get: function(name) {
-      return this.resources[name];
+    get: function(resource) {
+      var images = [];
+      
+      resource = [].concat(resource);
+      
+      for (var i=0, l=resource.length; i<l; i++) {
+        images[i] = this.resources[ resource[i] ];
+      }
+      
+      return images.length <= 1 ? images[0] : images;
     }
   });
   

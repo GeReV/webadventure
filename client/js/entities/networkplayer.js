@@ -3,15 +3,14 @@ define(['subsystems/keyboardhandler', 'entities/character', 'core/sprite', 'core
     init: function(game, sprite, x, y, isAlive) {
       this.game = game;
       this.sprite = sprite;
-      this.x = +x || 0;
-      this.y = +y || 0;
+      this.position(0, 0);
       this.width = sprite.width;
       this.height = sprite.height;
       this.direction = new Vector(0,0);
       this.speed = new Vector(5,5);
       
       // chareacter
-      this.isAlive = isAlive;
+      this.isAlive = isAlive || true;
       
       //player
       this.keyBind = {up: 'w', down: 's', left: 'a', right: 'd'}

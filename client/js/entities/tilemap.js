@@ -14,15 +14,8 @@ define(['core/sprite', 'subsystems/resourcemanager'], function(Sprite, ResourceM
       this.width = +width || 18;
       this.height = +height || 15;
       
+      this._initSprites(['grass.png', 'rock.png']);
       this._initMap();
-      
-      ResourceManager.add(['img/grass.png', 'img/rock.png'], function() {
-        for (var i=0, l=arguments.length; i<l; i++) {
-          var image = arguments[i];
-          
-          that.sprites.push(new Sprite(image, 0, 0, this.tileWidth, this.tileHeight));
-        }
-      });
     },
     update: function() {
       
@@ -41,6 +34,15 @@ define(['core/sprite', 'subsystems/resourcemanager'], function(Sprite, ResourceM
           
           sprite && renderer.render( sprite, i * tileW, j * tileH );
         }
+      }
+    },
+    _initSprites: function(images) {
+      var images = ResourceManager.get(images);
+      
+      for (var i=0, l=images.length; i<l; i++) {
+        var image = images[i];
+        
+        this.sprites.push(new Sprite(image, 0, 0, this.tileWidth, this.tileHeight));
       }
     },
     _initMap: function() {

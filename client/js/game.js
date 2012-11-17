@@ -29,7 +29,7 @@ define([
       var image = ResourceManager.get('crono.png'),
           sprite = new Sprite(image, image.width, image.height);
       
-      this.player = new NetworkPlayer(sprite, 0, 0);
+      this.player = new NetworkPlayer(this, sprite, 0, 0);
       this.entities.push(this.player);
     },
     
@@ -86,7 +86,7 @@ define([
     
     _addNetworkPlayer: function(userId) {
       var sprite = new Sprite( ResourceManager.get('friend.png') ),
-          player = new NetworkCharacter(sprite, 0,0, true, userId); // Set this to a new NetworkPlayer or whatever.
+          player = new NetworkCharacter(this, sprite, 0,0, true, userId); // Set this to a new NetworkPlayer or whatever.
         
       this.clients[userId] = player;
       

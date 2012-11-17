@@ -11,7 +11,7 @@ define(['core/sprite'], function(Sprite) {
     
     position: function(x, y) {
       if (arguments.length <= 0) {
-        return [x, y];
+        return [this.x, this.y];
       }
       
       this.x = Math.max(x || 0, 0);

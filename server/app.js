@@ -7,10 +7,10 @@
 
 var gameport = process.env.PORT || 4004,
     io = require('socket.io'),
-    express = require('express'),
+    express = require('express')(),
     UUID = require('node-uuid'),
     verbose = false,
-    app = express();
+    app = require('http').createServer( express );
 
 /* Express server set up. */
 
@@ -32,7 +32,7 @@ console.log('\t :: Express :: Listening on port ' + gameport);
 //This handler will listen for requests on /*, any file from the root of our server.
 //See expressjs documentation for more info on routing.
 
-app.options('*', function(req, res){
+express.options('*', function(req, res){
   console.log("writing headers only");
   res.header("Access-Control-Allow-Origin", "*");
   /*res.header("Access-Control-Allow-Credentials", true);
@@ -41,7 +41,7 @@ app.options('*', function(req, res){
   res.end('');
 });
 
-app.get('/socket.io/1/*', function(req, res) {
+express.get('/socket.io/1/*', function(req, res) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Credentials", true);
   res.writeHead(200, { 'Content-Type': 'application/javascript'});
@@ -49,7 +49,7 @@ app.get('/socket.io/1/*', function(req, res) {
   res.end('');
 });
 
-app.get('/*', function(req, res, next) {
+express.get('/*', function(req, res, next) {
 
   //This is the current file they have requested
   var file = req.params[0];
@@ -59,7 +59,7 @@ app.get('/*', function(req, res, next) {
     console.log('\t :: Express :: file requested : ' + file);
 
   //Send the requesting client the file.
-  res.sendfile(__dirname + '../client/' + file);
+  res.sendfile(__dirname + '/client/' + file);
 
 });
 //app.get *
@@ -68,7 +68,7 @@ app.get('/*', function(req, res, next) {
 //This way, when the client requests '/socket.io/' files, socket.io determines what the client needs.
 
 //Create a socket.io instance using our express server
-var sio = io.listen(),
+var sio = io.listen(app),
     clients = {};
 
 //Configure the socket.io connection settings.

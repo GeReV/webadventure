@@ -33,7 +33,7 @@ define([
       ResourceManager.add('img/crono.png', function(image) {
         that.player = new NetworkPlayer(new Sprite(image, image.width, image.height), 0, 0, true);
         that.entities.push(that.player);
-              
+        
         that.network.connect();
       });
     },
@@ -85,7 +85,12 @@ define([
         player.x = data.position.x;
         player.y = data.position.y;
       });
+<<<<<<< HEAD
+      
+      //network.connect();
+=======
 
+>>>>>>> 7db47a8a299160c77c382f435b9dd7f42041c016
     },
     
     _addNetworkPlayer: function(userId) {

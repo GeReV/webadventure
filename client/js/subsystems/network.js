@@ -37,6 +37,10 @@ define(function() {
           this.callbacks.splice(i, 1);
         }
       }
+    },
+    
+    getData: function() {
+      return this.data;
     }
   });
   

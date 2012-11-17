@@ -23,23 +23,23 @@ define(['subsystems/keyboardhandler', 'entities/character', 'core/sprite', 'core
       
       // network player  
       this.userID = "";
-      this.nextPosition = new vector;
+      this.nextPosition = new Vector;
       this.timeStamp = 0;
       this.nextTimeStamp = 0;
-      this.direction = new vector;
-      this.nextDirection = new vector;
+      this.direction = new Vector;
+      this.nextDirection = new Vector;
       
     },
     
     networkUpdate: function(network) {
-      var networkData = network.getData(); 
-      this.nextTimeStamp = networkData.timeStamp;
+      //var networkData = network.getData(); 
+      //this.nextTimeStamp = networkData.timeStamp;
       
       // make sure server authorithed that movement
-      if(this.lastPosition.x != networkData.position.x || this.lastPosition.y != networkData.position.y )
-        this.position(networkData.position.x, networkData.position.y);  
+      //if(this.lastPosition.x != networkData.position.x || this.lastPosition.y != networkData.position.y )
+        //this.position(networkData.position.x, networkData.position.y);  
       
-      this.lastPosition = this.position;
+      //this.lastPosition = this.position;
       
       console.log('sent server:' + this.position());
       network.send({ 

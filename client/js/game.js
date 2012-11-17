@@ -10,7 +10,7 @@ define([
   'entities/player',
   'entities/networkcharacter',
   'entities/networkplayer',
-  ], function(Renderer, Physics, ResourceManager, Network, Entity, Viewport, Sprite, TileMap, Player, networkCharacter, snetworkPlayer) {
+  ], function(Renderer, Physics, ResourceManager, Network, Entity, Viewport, Sprite, TileMap, Player, NetworkCharacter, NetworkPlayer) {
   var Game = Class.extend({
     init: function() {
       var canvas = document.getElementById('canvas');
@@ -85,8 +85,12 @@ define([
         player.x = data.position.x;
         player.y = data.position.y;
       });
+<<<<<<< HEAD
       
       //network.connect();
+=======
+
+>>>>>>> 7db47a8a299160c77c382f435b9dd7f42041c016
     },
     
     _addNetworkPlayer: function(userId) {
@@ -111,7 +115,7 @@ define([
     
     update: function () {
       for (var i = 0, entity; entity = this.entities[i]; i++) {
-        entity.updateNetwork && entity.updateNetwork(this.network);
+        entity.networkUpdate && entity.networkUpdate(this.network);
         entity.update();
         entity.translate(this.physics);        
       }

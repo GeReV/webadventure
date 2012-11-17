@@ -75,10 +75,10 @@ define([
       
       network.subscribe( (function(data) {
         var userId = data.userid,
-            player = that.clients[userId];
+            player = this.clients[userId];
 
         player.position(data.position[0], data.position[1]);
-      }));
+      }).bind(this));
 
       network.connect();
     },

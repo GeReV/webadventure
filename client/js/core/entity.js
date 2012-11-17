@@ -45,7 +45,7 @@ define(['core/sprite'], function(Sprite) {
       return this.opacity <= 0;
     },
     
-    render: function() {
+    render: function(renderer) {
       renderer.render(this.sprite, this.x, this.y);
     },
     

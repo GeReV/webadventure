@@ -10,14 +10,14 @@ define(function() {
       this.socket.on('connect', function() {});
       this.socket.on('onconnected', this.onConnect);
       this.socket.on('disconnect', this.onDisconnect);
+      this.socket.on('clientconnected', this.onClientConnected);
+      this.socket.on('clientdisconnected', this.onClientDisconnected);
       this.socket.on('update', this.publish);
     },
-    onConnect: function() {
-      
-    },
-    onDisconnect: function() {
-      
-    },
+    onConnect: function() {},
+    onDisconnect: function() {},
+    onClientConnected: function(userId) {},
+    onClientDisconnected: function(userId) {},
     send: function(data) {
       this.socket.send( JSON.stringify(data) );
     },

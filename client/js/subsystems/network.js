@@ -19,7 +19,7 @@ define(function() {
     onClientConnected: function(userId) {},
     onClientDisconnected: function(userId) {},
     send: function(data) {
-      this.socket.send( JSON.stringify(data) );
+      this.socket.emit('update', data);
     },
     publish: function(data) {
       var json = JSON.parse(data);

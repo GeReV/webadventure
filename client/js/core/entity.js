@@ -1,12 +1,13 @@
 define(['core/sprite'], function(Sprite) {
   var Entity = Class.extend({
-    init: function(sprite, x, y) {
+    init: function(game, sprite, x, y) {
+      this.game = game;
       this.sprite = sprite;
-      this.x = +x || 0;
-      this.y = +y || 0;
       this.direction = new Vector(0,0);
       this.speed = new Vector(0,0);
       this.isCollidable = true;
+      
+      this.position(0, 0);
     },
     
     position: function(x, y) {
@@ -14,8 +15,11 @@ define(['core/sprite'], function(Sprite) {
         return [this.x, this.y];
       }
       
-      this.x = Math.max(x || 0, 0);
-      this.y = Math.max(y || 0, 0);
+      this.x = Math.max(+x || 0, 0);
+      this.y = Math.max(+y || 0, 0);
+      
+      this.screenX = this.x - this.game.viewport.x;
+      this.screenY = this.y - this.game.viewport.y;
       
       return this;
     },

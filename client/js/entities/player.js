@@ -1,14 +1,14 @@
 define(['subsystems/keyboardhandler', 'entities/character', 'core/sprite', 'core/vector'], function(Keyboardhandler, Character, Sprite, Vector) {
   var Player = Character.extend({
-    init: function(sprite, x, y, isAlive) {
+    init: function(game, sprite, x, y, isAlive) {
+      this.game = game;
       this.sprite = sprite;
-      this.x = +x || 0;
-      this.y = +y || 0;
       this.width = sprite.width;
       this.height = sprite.height;
       this.direction = new Vector(0,0);
       this.speed = new Vector(5,5);
       
+      this.position(0, 0);
       // chareacter
       this.isAlive = isAlive;
       
@@ -26,7 +26,7 @@ define(['subsystems/keyboardhandler', 'entities/character', 'core/sprite', 'core
     update: function() {
       var inputs = this.keyboardhandler.update();
       this.direction.zero();
-      
+            
       if(inputs.keys[this.keyBind.up])
         this.direction.y = -1;
       if(inputs.keys[this.keyBind.down])
@@ -36,7 +36,12 @@ define(['subsystems/keyboardhandler', 'entities/character', 'core/sprite', 'core
         this.direction.x = 1;
       if(inputs.keys[this.keyBind.left])
         this.direction.x = -1; 
-        
+      
+      if(inputs.touch) {
+        this.direction.x = inputs.touchPosition[0] - this.x;
+        this.direction.y = inputs.touchPosition[1] - this.y;
+      }
+      
       this.direction.normalize();
     },
     

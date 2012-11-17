@@ -1,6 +1,7 @@
 define(['subsystems/keyboardhandler', 'entities/character', 'core/sprite', 'core/vector'], function(Keyboardhandler, Character, Sprite, Vector) {
   var NetworkCharacter = Character.extend({
-    init: function(sprite, x, y, isAlive, id ) {
+    init: function(game, sprite, x, y, isAlive, id ) {
+      this.game = game;
       this.sprite = sprite;
       this.x = +x || 0;
       this.y = +y || 0;

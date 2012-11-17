@@ -22,6 +22,9 @@ define(['vendor/keyboard', 'game'], function(KeyboardState, Game) {
         sequence: ++this.sequence
       };
       
+      inputs.touch = this.keyboard.touch;
+      inputs.touchPosition = this.keyboard.touchPosition; 
+      
       return inputs;
     },
     

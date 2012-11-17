@@ -36,6 +36,8 @@ define(function() {
     // to store the current state
     this.keyCodes = {};
     this.modifiers = {};
+    this.touch = false;
+    this.touchPosition
   
     // create callback to bind/unbind keyboard events
     var self = this;
@@ -45,9 +47,16 @@ define(function() {
     this._onKeyUp = function(event) {
       self._onKeyChange(event, false);
     };
+    
     // bind keyEvents
     document.addEventListener("keydown", this._onKeyDown, false);
     document.addEventListener("keyup", this._onKeyUp, false);
+    
+    document.addEventListener("touchstart", this._handleStart.bind(this), false);
+    document.addEventListener("touchend", this._handleEnd.bind(this), false);
+    //document.addEventListener("touchcancel", handleCancel, false);
+    //document.addEventListener("touchleave", this._handleLeave);
+    document.addEventListener("touchmove", this._handleMove.bind(this), false  );
   }
   /**
    * To stop listening of the keyboard events
@@ -109,6 +118,23 @@ define(function() {
         return false;
     };
     return true;
+  }
+  
+  
+  KeyboardState.prototype._handleStart = function(evt) {
+    evt.preventDefault();
+    this.touch = true;
+    this.touchPosition = [evt.touches[0].pageX, evt.touches[0].pageY];
+  }
+  
+  KeyboardState.prototype._handleMove = function(evt) {
+    evt.preventDefault();
+    this.touchPosition = [evt.touches[0].pageX, evt.touches[0].pageY];
+  }
+  
+  KeyboardState.prototype._handleEnd = function(evt) {
+    evt.preventDefault();
+    this.touch = false;
   }
   
   return KeyboardState;

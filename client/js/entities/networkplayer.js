@@ -41,7 +41,7 @@ define(['subsystems/keyboardhandler', 'entities/character', 'core/sprite', 'core
       
       //this.lastPosition = this.position;
       
-      console.log('sent server:' + this.position());
+      //console.log('sent server:' + this.position());
       network.send({ 
         position: this.position(),
       });

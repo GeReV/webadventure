@@ -1,57 +1,112 @@
-var io = require('socket.io'),
+/* Copyright (c) 2012 Sven "FuzzYspo0N" Bergström
+ http://underscorediscovery.com
+ MIT Licensed. See LICENSE for full license.
+
+ Usage : node simplest.app.js
+ */
+
+var gameport = process.env.PORT || 4004,
+    io = require('socket.io'),
     express = require('express'),
+    UUID = require('node-uuid'),
+    verbose = false,
     app = express.createServer();
- 
-app.configure(function () {
-    app.use(express.cookieParser());
-    app.use(express.session({secret: 'secret', key: 'express.sid'}));
-    app.use(function (req, res) {
-        res.end('<h2>Hello, your session id is ' + req.sessionID + '</h2>');
-    });
-});
- 
-app.listen();
-sio = io.listen(app);
-//active seesion mode
-var parseCookie = require('connect').utils.parseCookie;
-sio.set('authorization', function (data, accept) {
-    // check if there's a cookie header
-    if (data.headers.cookie) {
-        // if there is, parse the cookie
-        data.cookie = parseCookie(data.headers.cookie);
-        // note that you will need to use the same key to grad the
-        // session id, as you specified in the Express setup.
-        data.sessionID = data.cookie['express.sid'];
-    } else {
-       // if there isn't, turn down the connection with a message
-       // and leave the function.
-       return accept('No cookie transmitted.', false);
-    }
-    // accept the incoming connection
-    accept(null, true);
-});
 
-var Session = require('connect').middleware.session.Session;
-sio.set('authorization', function (data, accept) {
-    if (data.headers.cookie) {
-        data.cookie = parseCookie(data.headers.cookie);
-        data.sessionID = data.cookie['express.sid'];
-        // save the session store to the data object 
-        // (as required by the Session constructor)
-        data.sessionStore = sessionStore;
-        sessionStore.get(data.sessionID, function (err, session) {
-            if (err || !session) {
-                accept('Error', false);
-            } else {
-                // create a session object, passing data as request and our
-                // just acquired session data
-                data.session = new Session(data, session);
-                accept(null, true);
-            }
-        });
-    } else {
-       return accept('No cookie transmitted.', false);
-    }
-});
+/* Express server set up. */
 
-require('./command');
+//The express server handles passing our content to the browser,
+//As well as routing users where they need to go. This example is bare bones
+//and will serve any file the user requests from the root of your web server (where you launch the script from)
+//so keep this in mind - this is not a production script but a development teaching tool.
+
+//Tell the server to listen for incoming connections
+app.listen(gameport);
+
+//Log something so we know that it succeeded.
+console.log('\t :: Express :: Listening on port ' + gameport);
+
+//By default, we forward the / path to index.html automatically.
+app.get('/', function(req, res) {
+  //res.sendfile( __dirname + '/simplest.html' );
+});
+//This handler will listen for requests on /*, any file from the root of our server.
+//See expressjs documentation for more info on routing.
+
+app.get('/*', function(req, res, next) {
+
+  //This is the current file they have requested
+  var file = req.params[0];
+
+  //For debugging, we can track what files are requested.
+  if(verbose)
+    console.log('\t :: Express :: file requested : ' + file);
+
+  //Send the requesting client the file.
+  res.sendfile(__dirname + '/' + file);
+
+});
+//app.get *
+
+//Express and socket.io can work together to serve the socket.io client files for you.
+//This way, when the client requests '/socket.io/' files, socket.io determines what the client needs.
+
+//Create a socket.io instance using our express server
+var sio = io.listen(app),
+    clients = {};
+
+//Configure the socket.io connection settings.
+//See http://socket.io/
+sio.configure(function() {
+
+  sio.set('log level', 0);
+
+  sio.set('authorization', function(handshakeData, callback) {
+    callback(null, true);
+    // error first callback style
+  });
+});
+//Socket.io will call this function when a client connects,
+//So we can send that client a unique ID we use so we can
+//maintain the list of players.
+sio.sockets.on('connection', function(client) {
+
+  //Generate a new UUID, looks something like
+  //5b2ca132-64bd-4513-99da-90e838ca47d1
+  //and store this on their socket/connection
+  client.userid = UUID();
+  
+  client.broadcast.emit('clientconnected', client.userid);
+
+  //tell the player they connected, giving them their id and id's of other clients.
+  client.emit('onconnected', {
+    id: client.userid,
+    clients: Object.keys(clients)
+  });
+  
+  clients[client.userid] = client;
+
+  //Useful to know when someone connects
+  console.log('\t socket.io:: player ' + client.userid + ' connected');
+
+  //When this client disconnects
+  client.on('disconnect', function() {
+
+    //Useful to know when someone disconnects
+    console.log('\t socket.io:: client disconnected ' + client.userid);
+    
+    client.broadcast.emit('clientdisconnected', client.userid);
+    
+    delete clients[client.userid];
+
+  });
+  //client.on disconnect
+  
+  client.on('update', function(msg) {
+    
+    msg.userid = client.userid;
+    
+    client.broadcast.emit('update', msg);
+  });
+
+});
+//sio.sockets.on connection

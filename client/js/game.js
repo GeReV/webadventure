@@ -1,4 +1,4 @@
-define(['subsystems/renderer', 'subsystems/physics', 'subsystems/resourcemanager', 'core/entity', 'core/viewport', 'core/sprite', 'entities/tilemap', 'entities/player'], function(Renderer, Physics, ResourceManager, Entity, Viewport, Sprite, TileMap, Player) {
+define(['subsystems/renderer', 'subsystems/physics', 'subsystems/resourcemanager', 'subsystems/network', 'core/entity', 'core/viewport', 'core/sprite', 'entities/tilemap', 'entities/player'], function(Renderer, Physics, ResourceManager, Network, Entity, Viewport, Sprite, TileMap, Player) {
   var Game = Class.extend({
     init: function() {
       var canvas = document.getElementById('canvas');
@@ -13,12 +13,15 @@ define(['subsystems/renderer', 'subsystems/physics', 'subsystems/resourcemanager
       this._initAssets();
       this._initRenderer(canvas);
       this._initPhysics();
+      this._initNetwork();
     },
     _initAssets: function() {
       var that = this;
       
+      this.player = new Player(new Sprite(image, image.width, image.height), 0, 0, true);
+      
       ResourceManager.add('img/crono.png', function(image) {
-        that.entities.push(new Player(new Sprite(image, image.width, image.height), 0, 0, true));
+        that.entities.push();
       });
     },
     _initRenderer: function(canvas) {
@@ -28,6 +31,54 @@ define(['subsystems/renderer', 'subsystems/physics', 'subsystems/resourcemanager
     _initPhysics: function() {
       this.physics = new Physics();
       this.physics.tileMap = this.tileMap;
+    },
+    
+    _initNetwork: function() {
+      var that = this,
+          network;
+      
+      this.clients = {};
+      
+      this.network = network = new Network('10.0.0.169', 4004);
+      
+      network.onConnect = function(data) {
+        
+        that.player.userId = data.id;
+        
+        // Add the connected clients.
+        for (var i=0, l=data.clients.length; i < l; i++) {
+          that._addNetworkPlayer(data.clients[i]);
+        }
+      };
+      
+      network.onClientConnected = function(userId) {
+        that._addNetworkPlayer.call(that, userId);
+      };
+      
+      network.onClientDisconnected = function(userId) {
+        var player = that.clients[userId];
+        
+        delete that.clients[userId];
+        
+        var i = that.entities.indexOf(player);
+        
+        that.entities.splice(i, 1); // Remove player from the entities.
+      };
+      
+      network.subscribe(function(data) {
+        var userId = data.userid,
+            player = that.clients[userId];
+            
+        // TODO: Do something with player.
+      });
+    },
+    
+    _addNetworkPlayer: function(userId) {
+      var player = null; // Set this to a new NetworkPlayer or whatever.
+        
+      that.clients[userId] = player;
+      
+      that.entities.push(player);
     },
     
     draw: function(interpolation) {

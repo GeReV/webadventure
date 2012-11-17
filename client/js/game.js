@@ -90,11 +90,11 @@ define([
     },
     
     _addNetworkPlayer: function(userId) {
-      var player = new NetworkCharacter(null, 0,0, true, userId); // Set this to a new NetworkPlayer or whatever.
+      var player = new NetworkCharacter(this.player.sprite, 0,0, true, userId); // Set this to a new NetworkPlayer or whatever.
         
-      that.clients[userId] = player;
+      this.clients[userId] = player;
       
-      that.entities.push(player);
+      this.entities.push(player);
     },
     
     draw: function(interpolation) {

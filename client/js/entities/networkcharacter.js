@@ -22,9 +22,9 @@ define(['subsystems/keyboardhandler', 'entities/character', 'core/sprite', 'core
     },
     
     networkUpdate: function(network) {
-      this.nextPosition = networkData.position;
+      /*this.nextPosition = networkData.position;
       this.nextTimeStamp = networkData.timeStamp;
-      this.nextDirection = networkData.direction;
+      this.nextDirection = networkData.direction;*/
     },
     
     update: function() {

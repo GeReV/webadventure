@@ -12,7 +12,7 @@ define(function() {
       this.socket.on('disconnect', this.onDisconnect);
       this.socket.on('clientconnected', this.onClientConnected);
       this.socket.on('clientdisconnected', this.onClientDisconnected);
-      this.socket.on('update', this.publish);
+      this.socket.on('update', this.publish.bind(this));
     },
     onConnect: function() {},
     onDisconnect: function() {},
@@ -22,10 +22,10 @@ define(function() {
       this.socket.emit('update', data);
     },
     publish: function(data) {
-      var json = JSON.parse(data);
+      console.log(data);
       
       for (var i=0, l=this.callbacks.length; i < l; i++) {
-        this.callbacks[i](json);
+        this.callbacks[i](data);
       }
     },
     subscribe: function(callback) {

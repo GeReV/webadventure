@@ -127,6 +127,8 @@ define([
       });
     },
     
+    now: window.perfNow,
+    
     run: function() {
       var time = 0,
           deltaTime = 1000 / this.updateFPS,
@@ -137,7 +139,7 @@ define([
           accumulator = 0,
           that = this,
           frameUpdate = function() {
-            newTime = window.perfNow(),
+            newTime = that.now(),
             frameTime = newTime - currentTime;
             frameTime = frameTime > spiralOfDeathTime ? spiralOfDeathTime : frameTime; // avoding spiral of death
             currentTime = newTime;
@@ -151,7 +153,7 @@ define([
               accumulator -= deltaTime
             }
             
-            that.draw(window.perfNow()); // optional: interpolate render for faster hardwares
+            that.draw(that.now()); // optional: interpolate render for faster hardwares
                         
             window.requestAnimationFrame(frameUpdate);
           };

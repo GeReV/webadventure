@@ -8,11 +8,11 @@ define(['subsystems/keyboardhandler', 'entities/character', 'core/sprite', 'core
       this.height = sprite.height;
       
       this.direction = new Vector(0,0);
-      this.speed = new Vector(5,5);
       
       this.state = this.previousState = new State({
-        x: +x || 0,
-        y: +y || 0
+        x: State.lerp(+x || 0),
+        y: State.lerp(+y || 0),
+        speed: State.snap(8)
       });
       
       // chareacter

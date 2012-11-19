@@ -5,12 +5,13 @@ define(['core/sprite'], function(Sprite) {
       this.sprite = sprite;
       
       this.direction = new Vector(0,0);
-      this.speed = new Vector(0,0);
+      
       this.isCollidable = true;
       
       this.state = this.previousState = new State({
-        x: +x || 0,
-        y: +y || 0
+        x: State.lerp(+x || 0),
+        y: State.lerp(+y || 0),
+        speed: State.snap(0)
       });
     },
     

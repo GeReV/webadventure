@@ -19,9 +19,10 @@ define(['core/entity'], function() {
       }
       
       if(this.tileMap.width * this.tileMap.tileWidth < x + entity.width || 
-        this.tileMap.height * this.tileMap.tileHeight < y + entity.width)
+        this.tileMap.height * this.tileMap.tileHeight < y + entity.width) {
         return false;
-      
+      }
+
       return true;
     } 
   });

@@ -45,7 +45,7 @@ define(['subsystems/keyboardhandler', 'entities/character', 'core/sprite', 'core
       this.state.y += deltaY * interpolation;      
     },
     
-    translate: function(physics) {
+    translate: function(physics, dt) {
       // TODO: predict next position
     }
   });

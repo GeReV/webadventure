@@ -3,29 +3,33 @@ define(['core/sprite'], function(Sprite) {
     init: function(game, sprite, x, y) {
       this.game = game;
       this.sprite = sprite;
+      
       this.direction = new Vector(0,0);
       this.speed = new Vector(0,0);
       this.isCollidable = true;
       
-      this.position(0, 0);
+      this.state = this.previousState = new State({
+        x: +x || 0,
+        y: +y || 0
+      });
     },
     
     position: function(x, y) {
       if (arguments.length <= 0) {
-        return [this.x, this.y];
+        return [this.state.x, this.state.y];
       }
       
-      this.x = Math.max(+x || 0, 0);
-      this.y = Math.max(+y || 0, 0);
+      this.state.x = Math.max(+x || 0, 0);
+      this.state.y = Math.max(+y || 0, 0);
       
-      this.screenX = this.x - this.game.viewport.x;
-      this.screenY = this.y - this.game.viewport.y;
+      this.screenX = this.state.x - this.game.viewport.x;
+      this.screenY = this.state.y - this.game.viewport.y;
       
       return this;
     },
     
     move: function(x, y) {
-      return this.position(this.x + x, this.y + y);
+      return this.position(this.state.x + x, this.state.y + y);
     },
     
     isAlive: function() {
@@ -49,17 +53,19 @@ define(['core/sprite'], function(Sprite) {
       return this.opacity <= 0;
     },
     
-    render: function(renderer) {
-      renderer.render(this.sprite, this.x, this.y);
+    render: function(renderer, interpolation) {
+      var state = this.previousState.interpolate(this.state, interpolation);
+      
+      this.draw(renderer, state);
     },
     
-    update: function() {
-      
+    draw: function(renderer, state) {
+      renderer.render(this.sprite, state.x, state.y);
     },
     
-    translate: function() {
-      
-    }
+    update: function(physics, t, dt) {},
+    
+    translate: function() {}
     
   });
   

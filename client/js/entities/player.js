@@ -1,4 +1,4 @@
-define(['subsystems/keyboardhandler', 'entities/character', 'core/sprite', 'core/vector'], function(Keyboardhandler, Character, Sprite, Vector) {
+define(['subsystems/keyboardhandler', 'entities/character', 'core/sprite', 'core/vector', 'core/state'], function(Keyboardhandler, Character, Sprite, Vector, State) {
   var Player = Character.extend({
     init: function(game, sprite, x, y, isAlive) {
       this.game = game;
@@ -6,13 +6,17 @@ define(['subsystems/keyboardhandler', 'entities/character', 'core/sprite', 'core
       this.width = sprite.width;
       this.height = sprite.height;
       this.direction = new Vector(0,0);
-      this.speed = new Vector(5,5);
+      this.speed = 8;
       
-      this.position(0, 0);
-      // chareacter
+      this.state = this.previousState = new State({
+        x: +x || 0,
+        y: +y || 0
+      });
+      
+      // character
       this.isAlive = isAlive;
       
-      //player
+      // player
       this.keyBind = {up: 'w', down: 's', left: 'a', right: 'd'}
       this.keyboardhandler = new Keyboardhandler([
         this.keyBind.up,
@@ -23,8 +27,11 @@ define(['subsystems/keyboardhandler', 'entities/character', 'core/sprite', 'core
       
     },
     
-    update: function() {
+    update: function(physics, t, dt) {
       var inputs = this.keyboardhandler.update();
+      
+      this.previousState = this.state.clone();
+      
       this.direction.zero();
             
       if(inputs.keys[this.keyBind.up])
@@ -43,19 +50,21 @@ define(['subsystems/keyboardhandler', 'entities/character', 'core/sprite', 'core
       }
       
       this.direction.normalize();
+      
+      this.translate(physics, dt);
     },
     
-    render: function(renderer) {
+    draw: function(renderer, state) {
       var offset = renderer.viewport.offset();
       
-      renderer.viewport.center(this.x + this.width / 2, this.y + this.height / 2);
+      renderer.viewport.center(state.x + this.width / 2, state.y + this.height / 2);
       
-      renderer.render(this.sprite, this.x, this.y);
+      renderer.render(this.sprite, state.x, state.y);
     },
     
-    translate: function(physics) {
-      var deltaX = this.speed.x * this.direction.x,
-          deltaY = this.speed.y * this.direction.y;
+    translate: function(physics, dt) {
+      var deltaX = this.speed * this.direction.x * dt,
+          deltaY = this.speed * this.direction.y * dt;
       
       this.move(deltaX, deltaY);
       

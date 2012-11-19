@@ -9,14 +9,20 @@ define(['core/entity'], function() {
     },
     
     canMoveTo: function(entity) {
-      if (!this.tileMap.isPassableByXY(entity.x, entity.y)) {
+      var x, y, position = entity.position();
+      
+      x = position[0];
+      y = position[1];
+      
+      if (!this.tileMap.isPassableByXY(x, y)) {
         return false;
       }
       
-      if(this.tileMap.width * this.tileMap.tileWidth < entity.x + entity.width || 
-        this.tileMap.height * this.tileMap.tileHeight < entity.y + entity.width)
-        return false
-      
+      if(this.tileMap.width * this.tileMap.tileWidth < x + entity.width || 
+        this.tileMap.height * this.tileMap.tileHeight < y + entity.width) {
+        return false;
+      }
+
       return true;
     } 
   });

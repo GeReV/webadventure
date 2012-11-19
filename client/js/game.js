@@ -47,7 +47,7 @@ define([
       
       this.clients = {};
       
-      this.network = network = new Network('10.0.0.169', 4004);
+      this.network = network = new Network('127.0.0.1', 4004);
       
       network.onConnect = (function(data) {
         
@@ -92,23 +92,22 @@ define([
       this.entities.push(player);
     },
     
-    draw: function(interpolation) {
+    render: function(interpolation) {
       var renderer = this.renderer;
       
       //renderer.clear();
       
-      this.tileMap.render(renderer);
+      this.tileMap.render(renderer, interpolation);
       
       for (var i = 0, entity; entity = this.entities[i]; i++) {
-        entity.render(renderer);
+        entity.render(renderer, interpolation);
       }
     },
     
-    update: function () {
+    update: function (t, dt) {
       for (var i = 0, entity; entity = this.entities[i]; i++) {
         entity.networkUpdate && entity.networkUpdate(this.network);
-        entity.update();
-        entity.translate(this.physics);        
+        entity.update(this.physics, t, dt);
       }
     },
     
@@ -137,11 +136,13 @@ define([
           newTime = 0,
           frameTime = 0,
           accumulator = 0,
+          alpha,
           that = this,
           frameUpdate = function() {
             newTime = that.now(),
             frameTime = newTime - currentTime;
             frameTime = frameTime > spiralOfDeathTime ? spiralOfDeathTime : frameTime; // avoding spiral of death
+            console.log(frameTime);
             currentTime = newTime;
             
             accumulator += frameTime;
@@ -153,7 +154,9 @@ define([
               accumulator -= deltaTime
             }
             
-            that.draw(that.now()); // optional: interpolate render for faster hardwares
+            alpha = accumulator / deltaTime;
+        
+            that.render(alpha);  // optional: interpolate render for faster hardwares
                         
             window.requestAnimationFrame(frameUpdate);
           };

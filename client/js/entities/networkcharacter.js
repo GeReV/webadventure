@@ -3,12 +3,17 @@ define(['subsystems/keyboardhandler', 'entities/character', 'core/sprite', 'core
     init: function(game, sprite, x, y, isAlive, id ) {
       this.game = game;
       this.sprite = sprite;
-      this.x = +x || 0;
-      this.y = +y || 0;
+      
       this.width = sprite.width;
       this.height = sprite.height;
+      
       this.direction = new Vector(0,0);
       this.speed = new Vector(5,5);
+      
+      this.state = this.previousState = new State({
+        x: +x || 0,
+        y: +y || 0
+      });
       
       // chareacter
       this.isAlive = isAlive;
@@ -28,19 +33,19 @@ define(['subsystems/keyboardhandler', 'entities/character', 'core/sprite', 'core
       this.nextDirection = networkData.direction;*/
     },
     
-    update: function() {
+    update: function(physics, t, dt) {
       // interpolate
       var delataT = this.nextTimeStamp - this.timeStamp, 
-          deltaX = this.nextPosition.x - this.position.x,
-          deltaY = this.nextPosition.y - this.position.y,
+          deltaX = this.nextPosition.x - this.state.x,
+          deltaY = this.nextPosition.y - this.state.y,
           interpolation = 0.1 * delataT;
     
       this.timeStamp = this.nextTimeStamp;
-      this.position.x += deltaX * interpolation;
-      this.position.y += deltaY * interpolation;      
+      this.state.x += deltaX * interpolation;
+      this.state.y += deltaY * interpolation;      
     },
     
-    translate: function(physics) {
+    translate: function(physics, dt) {
       // TODO: predict next position
     }
   });

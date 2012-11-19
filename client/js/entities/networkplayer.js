@@ -1,13 +1,17 @@
-define(['subsystems/keyboardhandler', 'entities/character', 'core/sprite', 'core/vector', 'entities/player'], function(Keyboardhandler, Character, Sprite, Vector, Player) {
+define(['subsystems/keyboardhandler', 'entities/character', 'core/sprite', 'core/vector', 'core/state', 'entities/player'], function(Keyboardhandler, Character, Sprite, Vector, State, Player) {
   var NetworkPlayer = Player.extend({
     init: function(game, sprite, x, y, isAlive) {
       this.game = game;
       this.sprite = sprite;
-      this.position(0, 0);
       this.width = sprite.width;
       this.height = sprite.height;
       this.direction = new Vector(0,0);
-      this.speed = new Vector(5,5);
+      this.speed = 8;
+      
+      this.state = this.previousState = new State({
+        x: +x || 0,
+        y: +y || 0
+      });
       
       // chareacter
       this.isAlive = isAlive || true;

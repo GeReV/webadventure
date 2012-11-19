@@ -142,13 +142,12 @@ define([
             newTime = that.now(),
             frameTime = newTime - currentTime;
             frameTime = frameTime > spiralOfDeathTime ? spiralOfDeathTime : frameTime; // avoding spiral of death
-            console.log(frameTime);
             currentTime = newTime;
             
             accumulator += frameTime;
         
             while(accumulator >= deltaTime) {
-              that.update();
+              that.update(time, deltaTime);
               
               time += deltaTime;
               accumulator -= deltaTime
@@ -160,6 +159,7 @@ define([
                         
             window.requestAnimationFrame(frameUpdate);
           };
+
           
       window.requestAnimationFrame(frameUpdate);
     },

@@ -15,10 +15,10 @@ define([
     init: function() {
       var canvas = document.getElementById('canvas');
       
-      this.fps = 30;
+      this.updateFPS = 30; // updates per second
+      this.maxUpdateFPS = 75; // max allowed updates per second
       
       this.entities = [];
-      
     },
     
     _initAssets: function(callback) {
@@ -128,31 +128,35 @@ define([
     },
     
     run: function() {
-      var loops = 0, 
-          skipTicks = 1000 / this.fps,
-          maxFrameSkip = 10,
-          nextGameTick = Game.localTime = window.perfNow(),
-          lastGameTick,
+      var time = 0,
+          deltaTime = this.updateFPS / 1000,
+          spiralOfDeathTime = this.maxUpdateFPS / 1000,
+          currentTime = window.perfNow(),
+          newTime = 0,
+          frameTime = 0,
+          accumulator = 0,
           that = this,
-          tick = function() {
-            loops = 0;
+          frameUpdate = function() {
+            newTime = window.perfNow(),
+            frameTime = newTime - currentTime;
+            frameTime = frameTime > spiralOfDeathTime ? spiralOfDeathTime : frameTime; // avoding spiral of death
+            currentTime = newTime;
+            
+            accumulator += frameTime;
         
-            while (window.perfNow() > nextGameTick) {
+            while(accumulator >= deltaTime) {
               that.update();
-              nextGameTick += skipTicks;
-              loops++;
-            }
-        
-            if (!loops) {
-              that.draw((nextGameTick - window.perfNow()) / skipTicks);
-            } else {
-              that.draw(0);
+              
+              time += deltaTime;
+              accumulator -= deltaTime
             }
             
-            window.requestAnimationFrame(tick);
+            that.draw(window.perfNow()); // optional: interpolate render for faster hardwares
+                        
+            window.requestAnimationFrame(frameUpdate);
           };
           
-      window.requestAnimationFrame(tick);
+      window.requestAnimationFrame(frameUpdate);
     },
 
     getTime: function() {

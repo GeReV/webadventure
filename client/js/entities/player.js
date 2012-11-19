@@ -6,7 +6,7 @@ define(['subsystems/keyboardhandler', 'entities/character', 'core/sprite', 'core
       this.width = sprite.width;
       this.height = sprite.height;
       this.direction = new Vector(0,0);
-      this.speed = 0.005;
+      this.speed = 0.5;
       
       this.state = this.previousState = new State({
         x: +x || 0,

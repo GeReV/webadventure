@@ -126,7 +126,7 @@ define([
       });
     },
     
-    now: window.perfNow,
+    now: window.perfNow, // TODO: maybe make all the resource accesible threw game? and move the polyfill inside game
     
     run: function() {
       var time = 0,
@@ -159,8 +159,7 @@ define([
                         
             window.requestAnimationFrame(frameUpdate);
           };
-
-          
+ 
       window.requestAnimationFrame(frameUpdate);
     },
 

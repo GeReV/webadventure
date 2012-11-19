@@ -44,7 +44,7 @@ define(function() {
     },
     
     _lerp: function(a, b, value) {
-      return a + (a - b) * value;
+      return a + (b - a) * value;
     }
   });
   

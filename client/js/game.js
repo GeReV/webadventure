@@ -16,7 +16,7 @@ define([
       var canvas = document.getElementById('canvas');
       
       this.updateFPS = 30; // updates per second
-      this.maxUpdateFPS = 75; // max allowed updates per second
+      this.minUpdateFPS = 5; // min allowed updates per second
       
       this.entities = [];
     },
@@ -129,8 +129,8 @@ define([
     
     run: function() {
       var time = 0,
-          deltaTime = this.updateFPS / 1000,
-          spiralOfDeathTime = this.maxUpdateFPS / 1000,
+          deltaTime = 1000 / this.updateFPS,
+          spiralOfDeathTime = 1000 / this.minUpdateFPS,
           currentTime = window.perfNow(),
           newTime = 0,
           frameTime = 0,

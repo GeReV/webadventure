@@ -47,7 +47,7 @@ define([
       
       this.clients = {};
       
-      this.network = network = new Network('10.0.0.169', 4004);
+      this.network = network = new Network('127.0.0.1', 4004);
       
       network.onConnect = (function(data) {
         
@@ -92,23 +92,22 @@ define([
       this.entities.push(player);
     },
     
-    draw: function(interpolation) {
+    render: function(interpolation) {
       var renderer = this.renderer;
       
       //renderer.clear();
       
-      this.tileMap.render(renderer);
+      this.tileMap.render(renderer, interpolation);
       
       for (var i = 0, entity; entity = this.entities[i]; i++) {
-        entity.render(renderer);
+        entity.render(renderer, interpolation);
       }
     },
     
-    update: function () {
+    update: function (t, dt) {
       for (var i = 0, entity; entity = this.entities[i]; i++) {
         entity.networkUpdate && entity.networkUpdate(this.network);
-        entity.update();
-        entity.translate(this.physics);        
+        entity.update(this.physics, t, dt);
       }
     },
     
@@ -130,31 +129,38 @@ define([
     run: function() {
       var time = 0,
           deltaTime = this.updateFPS / 1000,
-          spiralOfDeathTime = this.maxUpdateFPS / 1000,
           currentTime = window.perfNow(),
           newTime = 0,
           frameTime = 0,
           accumulator = 0,
-          that = this,
-          frameUpdate = function() {
-            newTime = window.perfNow(),
-            frameTime = newTime - currentTime;
-            frameTime = frameTime > spiralOfDeathTime ? spiralOfDeathTime : frameTime; // avoding spiral of death
-            currentTime = newTime;
-            
-            accumulator += frameTime;
+          alpha,
+          that = this
         
-            while(accumulator >= deltaTime) {
-              that.update();
-              
-              time += deltaTime;
-              accumulator -= deltaTime
-            }
-            
-            that.draw(window.perfNow()); // optional: interpolate render for faster hardwares
-                        
-            window.requestAnimationFrame(frameUpdate);
-          };
+      function frameUpdate() {
+        newTime = window.perfNow(),
+        frameTime = newTime - currentTime;
+        
+        if (frameTime > deltaTime * 10) {
+          frameTime = deltaTime * 10; // avoiding spiral of death
+        }
+        
+        currentTime = newTime;
+        
+        accumulator += frameTime;
+    
+        while(accumulator >= deltaTime) {
+          that.update(time, deltaTime);
+          
+          time += deltaTime;
+          accumulator -= deltaTime
+        }
+        
+        var alpha = accumulator / deltaTime;
+        
+        that.render(alpha);
+                    
+        window.requestAnimationFrame(frameUpdate);
+      };
           
       window.requestAnimationFrame(frameUpdate);
     },

@@ -1,4 +1,8 @@
-define(['core/entity', 'core/vector', 'core/sprite'], function(Entity, Vector, Sprite) {
+define([
+  'core/entity',
+  'core/vector', 
+  'core/sprite'
+  ], function(Entity, Vector, Sprite) {
   var Character = Entity.extend({
     init: function(game, sprite, x, y, isAlive) {
       this.game = game;

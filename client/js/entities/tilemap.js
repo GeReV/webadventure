@@ -1,4 +1,7 @@
-define(['core/sprite', 'subsystems/resourcemanager'], function(Sprite, ResourceManager) {
+define([
+  'core/sprite', 
+  'subsystems/resourcemanager'
+  ], function(Sprite, ResourceManager) {
   var TileMap = Class.extend({
     init: function(width, height) {
       var that = this;

@@ -1,4 +1,11 @@
-define(['subsystems/keyboardhandler', 'entities/character', 'core/sprite', 'core/vector', 'core/state', 'entities/player'], function(Keyboardhandler, Character, Sprite, Vector, State, Player) {
+define([
+  'subsystems/keyboardhandler',
+  'entities/character', 
+  'core/sprite', 
+  'core/vector', 
+  'core/state', 
+  'entities/player'
+  ], function(Keyboardhandler, Character, Sprite, Vector, State, Player) {
   var NetworkPlayer = Player.extend({
     init: function(game, sprite, x, y, isAlive) {
       this.game = game;

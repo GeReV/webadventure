@@ -1,4 +1,10 @@
-define(['subsystems/keyboardhandler', 'entities/character', 'core/sprite', 'core/vector', 'core/state'], function(Keyboardhandler, Character, Sprite, Vector, State) {
+define([
+  'subsystems/keyboardhandler', 
+  'entities/character', 
+  'core/sprite', 
+  'core/vector', 
+  'core/state'
+  ], function(Keyboardhandler, Character, Sprite, Vector, State) {
   var Player = Character.extend({
     init: function(game, sprite, x, y, isAlive) {
       this.game = game;

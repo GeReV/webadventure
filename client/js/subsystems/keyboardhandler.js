@@ -1,4 +1,7 @@
-define(['vendor/keyboard', 'game'], function(KeyboardState, Game) {
+define([
+  'vendor/keyboard', 
+  'game'
+  ], function(KeyboardState, Game) {
   var KeyboardHandler = Class.extend({
     init: function(keys) {
       this.keyboard = new KeyboardState;

@@ -1,4 +1,7 @@
-define(['core/sprite', 'core/vector'], function(Sprite) {
+define([
+  'core/sprite',
+  'core/vector'
+  ], function(Sprite, Vector) {
   var Enemy = Character.extend({
     init: function(sprite, x, y, isAlive) {
       // entitiy

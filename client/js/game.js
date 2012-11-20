@@ -155,11 +155,11 @@ define([
             
             alpha = accumulator / deltaTime;
         
-            that.render(alpha);  // optional: interpolate render for faster hardwares
+            that.render(alpha); // optional: interpolate render for faster hardwares
                         
             window.requestAnimationFrame(frameUpdate);
           };
- 
+
       window.requestAnimationFrame(frameUpdate);
     },
 

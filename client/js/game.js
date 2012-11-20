@@ -15,8 +15,7 @@ define([
     init: function() {
       var canvas = document.getElementById('canvas');
       
-      this.updateFPS = 30; // updates per second
-      this.minUpdateFPS = 5; // min allowed updates per second
+      this.updateInterval = 0.03; // update each interval in seconds
       
       this.entities = [];
     },
@@ -126,39 +125,41 @@ define([
       });
     },
     
-    now: window.perfNow, // TODO: maybe make all the resource accesible threw game? and move the polyfill inside game
-    
     run: function() {
       var time = 0,
-          deltaTime = 1000 / this.updateFPS,
-          spiralOfDeathTime = 1000 / this.minUpdateFPS,
-          currentTime = window.perfNow(),
+          deltaTime = this.updateInterval,
+          currentTime = window.perfNow() / 1000, // Maybe delegate this to an outer Timer class.
           newTime = 0,
           frameTime = 0,
           accumulator = 0,
           alpha,
-          that = this,
-          frameUpdate = function() {
-            newTime = that.now(),
-            frameTime = newTime - currentTime;
-            frameTime = frameTime > spiralOfDeathTime ? spiralOfDeathTime : frameTime; // avoding spiral of death
-            currentTime = newTime;
-            
-            accumulator += frameTime;
+          that = this;
         
-            while(accumulator >= deltaTime) {
-              that.update(time, deltaTime);
-              
-              time += deltaTime;
-              accumulator -= deltaTime
-            }
-            
-            alpha = accumulator / deltaTime;
+      function frameUpdate() {
+        newTime = window.perfNow() / 1000,
+        frameTime = newTime - currentTime;
         
-            that.render(alpha); // optional: interpolate render for faster hardwares
-                        
-            window.requestAnimationFrame(frameUpdate);
-          };
+        if (frameTime > deltaTime * 10) {
+          frameTime = deltaTime * 10; // avoiding spiral of death
+        } 
+
+        currentTime = newTime;
+        
+        accumulator += frameTime;
+    
+        while(accumulator >= deltaTime) {
+          that.update(time, deltaTime);
+          
+          time += deltaTime;
+          accumulator -= deltaTime
+        }
+        
+        alpha = accumulator / deltaTime;
+    
+        that.render(alpha);
+                    
+        window.requestAnimationFrame(frameUpdate);
+      };
 
       window.requestAnimationFrame(frameUpdate);
     },

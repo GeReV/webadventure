@@ -3,14 +3,16 @@ define(['subsystems/keyboardhandler', 'entities/character', 'core/sprite', 'core
     init: function(game, sprite, x, y, isAlive) {
       this.game = game;
       this.sprite = sprite;
+      
       this.width = sprite.width;
       this.height = sprite.height;
+      
       this.direction = new Vector(0,0);
-      this.speed = 0.5;
       
       this.state = this.previousState = new State({
-        x: +x || 0,
-        y: +y || 0
+        x: State.lerp(+x || 0),
+        y: State.lerp(+y || 0),
+        speed: State.snap(160)
       });
       
       // character
@@ -63,8 +65,8 @@ define(['subsystems/keyboardhandler', 'entities/character', 'core/sprite', 'core
     },
     
     translate: function(physics, dt) {
-      var deltaX = this.speed * this.direction.x * dt,
-          deltaY = this.speed * this.direction.y * dt;
+      var deltaX = this.state.speed * this.direction.x * dt,
+          deltaY = this.state.speed * this.direction.y * dt;
       
       this.move(deltaX, deltaY);
       

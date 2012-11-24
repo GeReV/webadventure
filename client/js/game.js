@@ -1,6 +1,7 @@
 define([
   'subsystems/renderer',
-  'subsystems/physics', 
+  'subsystems/physics',
+  'subsystems/input', 
   'subsystems/resourcemanager', 
   'subsystems/network', 
   'core/entity', 
@@ -10,7 +11,7 @@ define([
   'entities/player',
   'entities/networkcharacter',
   'entities/networkplayer',
-  ], function(Renderer, Physics, ResourceManager, Network, Entity, Viewport, Sprite, TileMap, Player, NetworkCharacter, NetworkPlayer) {
+  ], function(Renderer, Physics, Input, ResourceManager, Network, Entity, Viewport, Sprite, TileMap, Player, NetworkCharacter, NetworkPlayer) {
   var Game = Class.extend({
     init: function() {
       var canvas = document.getElementById('canvas');
@@ -92,22 +93,13 @@ define([
     },
     
     render: function(interpolation) {
-      var renderer = this.renderer;
-      
-      //renderer.clear();
-      
-      this.tileMap.render(renderer, interpolation);
-      
-      for (var i = 0, entity; entity = this.entities[i]; i++) {
-        entity.render(renderer, interpolation);
-      }
+      Renderer.render(t, interpolation);
+      //this.tileMap.render(renderer, interpolation);
     },
     
     update: function (t, dt) {
-      for (var i = 0, entity; entity = this.entities[i]; i++) {
-        entity.networkUpdate && entity.networkUpdate(this.network);
-        entity.update(this.physics, t, dt);
-      }
+      Input.recive(t, dt);
+      Physics.update(t, dt);
     },
     
     start: function() {
@@ -156,17 +148,13 @@ define([
         
         alpha = accumulator / deltaTime;
     
-        that.render(alpha);
+        that.render(time + alpha, alpha);
                     
         window.requestAnimationFrame(frameUpdate);
       };
 
       window.requestAnimationFrame(frameUpdate);
     },
-
-    getTime: function() {
-      return Game.localTime;
-    }
   });
   
   return Game;

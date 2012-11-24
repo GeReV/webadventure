@@ -1,31 +1,29 @@
 define(['core/entity'], function() {
   var Physics = Class.extend({
     init: function() {
-      this.entities = [];
+      this.components = [];
     },
     
-    translate: function(entities) {
+    add: function(component) {
+      var array;
       
+      this.components.push(component);
+      
+      if(array = this[component.type]) {
+        array.push(component);
+        return; 
+      }
+      
+      this[component.type] = [component];
     },
     
-    canMoveTo: function(entity) {
-      var x, y, position = entity.position();
-      
-      x = position[0];
-      y = position[1];
-      
-      if (!this.tileMap.isPassableByXY(x, y)) {
-        return false;
-      }
-      
-      if(this.tileMap.width * this.tileMap.tileWidth < x + entity.width || 
-        this.tileMap.height * this.tileMap.tileHeight < y + entity.width) {
-        return false;
-      }
-
-      return true;
-    } 
+    update: function(t, dt) {
+      // use subtree to fasten the algorithem according to their speeds and such
+      for(var i = 0, component; component = this.components[i]; i++) {
+        component.update(this, t, dt);
+      }; 
+    },
   });
   
-  return Physics;
+  return new Physics(); // TODO: lame singleton. change later
 });

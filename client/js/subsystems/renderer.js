@@ -1,6 +1,8 @@
 define(['core/entity'], function() {
   var Renderer = Class.extend({
     init: function(canvas, viewport) {
+      this.components = [];
+      
       this.height = canvas.height;
       this.width = canvas.width;
       
@@ -10,7 +12,33 @@ define(['core/entity'], function() {
       this.viewport = viewport;
     },
     
-    render: function(sprite, x, y) {
+    add: function(renderComponent) {
+      var array;
+      
+      this.components.push(component);
+      
+      if(array = this[component.type]) {
+        array.push(component);
+        return; 
+      }
+      
+      this[component.type] = [component];
+    },
+    
+    render: function(t, dt) {
+      this.clear();
+      
+      // do culling but watch for transperent objects
+      
+      // do rearance for better drawing performance
+      
+      // render each component
+      for(var i = 0, component; component = this.components[i]; i++) {
+        component.render(this, t, dt);
+      };
+    },
+    
+    drawSprite: function(sprite, x, y) {
       var offset = this.viewport.offset();
       
       x = +x || 0;

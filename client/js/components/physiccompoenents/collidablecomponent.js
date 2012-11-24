@@ -1,9 +1,9 @@
 define(['components/physiccomponent'], function(PhysicComponent) {
   var CollidableComponent = PhysicComponent.extend({
     init: function(positionComponent, boundaries) {
-      this.Component('collidable');
       this.PhysicComponent(positionComponent);
       this.CollidableComponent(boundaries);
+      this.Component('collidable');
     },
     
     // CollidableComponent constructor
@@ -13,7 +13,7 @@ define(['components/physiccomponent'], function(PhysicComponent) {
     
     update: function(physics, t, dt) {
       for(var i = 0, component; component = this.collidable[i]; i++) {
-        // check if this.positionComponent.state to positionComponent.previuseState crosses any other pathes
+        // check if this.positionComponent.state to positionComponent.previuseState crosses any other pathes, if does fix it to the right position
       };
     }
   });

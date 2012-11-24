@@ -13,39 +13,23 @@ define([
           force = new ForceComponent(position, new Vector(0,0), 160),
           // collidable = new CollidableComponent(), // btw the order of creating the components does matter and very important 
           render = new SpriteComponent(position, false, sprite),
-          keys = {up: 'w', down: 's', left: 'a', right: 'd'}, 
-          upInput = new InputTriggerComponent(
-            new TriggerComponent(function() {
+          keys = {up: 'w', down: 's', left: 'a', right: 'd'},
+          triggerUp = new TriggerComponent(function() {
               force.direction.y = -1;
-            }, this), 
-            function(input) {
-              if(input.keyboard.pressed(keys.up))
-                return true;
-            }),
-          downInput = new InputTriggerComponent(
-            new TriggerComponent(function() {
+            }, this),
+          triggerDown = new TriggerComponent(function() {
               force.direction.y = 1;
-            }, this), 
-            function(input) {
-              if(input.keyboard.pressed(keys.down))
-                return true;
-            }),
-          leftInput = new InputTriggerComponent(
-            new TriggerComponent(function() {
+            }, this),
+          triggerLeft = new TriggerComponent(function() {
               force.direction.x = -1;
-            }, this), 
-            function(input) {
-              if(input.keyboard.pressed(keys.left))
-                return true;
-            }),
-          rightInput = new InputTriggerComponent(
-            new TriggerComponent(function() {
+            }, this),
+          triggerRight = new TriggerComponent(function() {
               force.direction.x = 1;
             }, this),
-            function(input) {
-              if(input.keyboard.pressed(keys.right))
-                return true;
-            });      
+          upInput = new KeyTriggerComponent(triggerUp, keys.up),
+          downInput = new KeyTriggerComponent(triggerDown, keys.down),
+          leftInput = new KeyTriggerComponent(triggerLeft, keys.left),
+          rightInput = new KeyTriggerComponent(triggerRight, keys.right);      
     },
   });
   

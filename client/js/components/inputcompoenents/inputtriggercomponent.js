@@ -1,9 +1,9 @@
 define(['components/inputcomponent'], function(InputComponent) {
   var InputTriggerComponent = InputComponent.extend({
     init: function(triggerComponent, triggerFunc) {
-      this.Component('inputtrigger');
       this.InputComponent();
       this.InputTriggerComponent(triggerComponent, triggerFunc);
+      this.Component('inputtrigger');
     },
     
     // PlayerInputTriggerComponent constructor
@@ -14,7 +14,7 @@ define(['components/inputcomponent'], function(InputComponent) {
     
     recived: function(input, t, dt) {
       if(this.triggerFunc(input))
-        this.trigger(t, dt);
+        this.triggerComponent.trigger(t, dt);
     }
   });
   

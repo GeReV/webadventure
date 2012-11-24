@@ -4,9 +4,9 @@ define([
   ], function(Sprite, RenderComponent) {
   var SpriteComponent = RenderComponent.extend({
     init: function(positionComponent, isTransperet, sprite) {
-      this.Component('sprite');
       this.RenderComponent(positionComponent, isTransperet);
       this.SpriteComponent(sprite);
+      this.Component('sprite');
     },
     
     // SpriteComponent constructor

@@ -3,6 +3,7 @@ define(['core/vector'], function(Vector) {
     init: function(positionComponent, direction, magnitude) {
       this.PhysicComponent(positionComponent);
       this.ForceComponent(direction, magnitude);
+      this.Component('force');
     },
     
     // PositionComponent constructor

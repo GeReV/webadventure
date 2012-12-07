@@ -1,26 +1,27 @@
+// systems loading order is the same order they will be activated
 define([
-  'subsystems/renderer',
-  'subsystems/physics',
-  'subsystems/input', 
-  'subsystems/resourcemanager', 
-  'subsystems/network', 
-  'core/entity', 
-  'core/viewport', 
-  'core/sprite', 
-  'entities/tilemap', 
-  'entities/player',
-  'entities/networkcharacter',
-  'entities/networkplayer',
-  ], function(Renderer, Physics, Input, ResourceManager, Network, Entity, Viewport, Sprite, TileMap, Player, NetworkCharacter, NetworkPlayer) {
+  'core/core',
+  'systems/logic/transformsystem',
+  'systems/logic/directionsystem',
+  'systems/logic/playerinputsystem',
+  'systems/logic/speedsystem',
+  'systems/output/outputtransformsystem',
+  'systems/output/spriterendersystem',
+  
+  'systems/templates/playertemplate', // think about a nice way to initialize the engine with templates
+  ], function(Core, PlayerTemplate) {
   var Game = Class.extend({
     init: function() {
-      var canvas = document.getElementById('canvas');
-      
-      this.updateInterval = 0.03; // update each interval in seconds
-      
-      this.entities = [];
+      new PlayerAssemblage;
     },
     
+    run: function() {
+      Core.run();
+    },
+    
+    
+    
+    /*
     _initAssets: function(callback) {
       ResourceManager.add(['img/grass.png', 'img/rock.png', 'img/crono.png', 'img/friend.png'], callback.bind(this));
     },
@@ -155,6 +156,8 @@ define([
 
       window.requestAnimationFrame(frameUpdate);
     },
+    
+    */
   });
   
   return Game;

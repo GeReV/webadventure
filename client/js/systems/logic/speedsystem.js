@@ -1,6 +1,7 @@
 define([
-  'core/logicsystem'
-  ], function(LogicSystem) {
+  'core/logicsystem',
+  'util/vector'
+  ], function(LogicSystem, vector) {
   var SpeedSystem = LogicSystem.extend({
     init: function() {
       this.LogicSystem('Speed');
@@ -12,17 +13,18 @@ define([
       
     },
     
-    constructComponent: function(speed, transformComp, directionComp) {
-      return {speed: speed, transformComp: transformComp, lastPosition: transformComp.position, directionComp: directionComp};
+    component: function(speed, lastPosition) {
+      return {speed: speed || 0}
     },
     
-    proccess: function(t, dt) {
-      for (var i = 0, component; component = this.components[i]; i ++) {
-        var transformComp = component.transformComp,
-            directionComp = component.directionComp;
+    proccess: function() {
+      for (var i = 0, entity; entity = this.entity[i]; i++) {
+        var transformComp = entity.get('Transform'),
+            directionComp = entity.get('Direction'),
+            speedComp = entity.get('Speed'),
+            dt = entity.get('Time').dt;
             
-        component.lastPosition = component.transformComp.position; 
-        transformComp.position = transformComp.position.add(directionComp.direction.multiply(component.speed * dt)); 
+        transformComp.position = transformComp.position.add(directionComp.direction.multiply(speedComp.speed * dt)); 
       };
     },
   });

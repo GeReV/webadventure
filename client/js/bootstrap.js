@@ -1,4 +1,44 @@
 define(function() {
+  // Custom Event class
+  (function(w) {
+    if (Event || w['Event'])
+      return;
+    
+    function Event() {
+      if(this._initialized) {
+        this.trigger(arguments);
+        return;
+      }
+      
+      this.constructor();  
+    }
+    
+    Event.prototype.constructor = function() {
+      this.eventHandlers = new Array();
+      this._initialized = true;
+    }
+    
+    Event.prototype.add = function(eventHandler) {
+      this.eventHandlers.push(eventHandler.bind(this));
+    }
+    
+    Event.prototype.remove = function(eventHandler) {
+      for(var i = 0; i < this.eventHandlers.lengh; i++) {
+        if(this.eventHandlers[i] !== eventHandler) continue;
+        
+        this.eventHandlers[i] = undefined;
+        return;
+      }
+    }
+    
+    Event.prototype.trigger = function() {
+      for(var i = 0; i < this.eventHandlers.lengh; i++) {
+        this.eventHandlers[i] && this.eventHandlers[i](arguments);
+      }
+    }
+  })(window);
+  
+  // bind for function
   if (!Function.prototype.bind) {
     Function.prototype.bind = function (obj) {
       // closest thing possible to the ECMAScript 5 internal IsCallable function

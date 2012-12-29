@@ -1,8 +1,7 @@
 define([
-  'core/core', 
   'core/outputsystem',
-  'util/renderer'
-  ], function(Core, OutputSystem, Renderer) {
+  'util/Render2D/renderer'
+  ], function(OutputSystem, Renderer) {
   var SpriteRenderSystem = OutputSystem.extend({
     init: function() {
       this.OutputSystem('SprtieRender');
@@ -15,17 +14,20 @@ define([
       this.renderer = new Renderer(canvas)
     },
     
-    constructComponent: function(outputTransformComp, sprite) {
+    constructComponent: function(sprite) {
       return {outputTransformComp: outputTransformComp, sprite: sprite};
     },
     
     proccess: function(t, dt) {
       this.renderer.clear();
-      for (var i = 0, component; component = this.components[i]; i++) {
+      for (var i = 0, entity; entity = this.entities[i]; i++) {
+        var spriteComp = entity.get('SprtieRender'),
+            outputTransformComp = entity.get('OutputTransform');
+        
         this.renderer.drawSprite(
-          component.sprite,
-          component.outputTransformComp.position.x,
-          component.outputTransformComp.position.y
+          spriteComp.sprite,
+          outputTransformComp.position.x,
+          outputTransformComp.position.y
         );
       };
     },

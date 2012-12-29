@@ -1,7 +1,8 @@
 define([ 
-  'systems/logic/speedsystem'
-  ], function(SpeedSystem) {
-  var OutputTransformSystem = SpeedSystem.extend({
+  'core/outputsystem',
+  'util/vector'
+  ], function(OutputSystem, Vector) {
+  var OutputTransformSystem = OutputSystem.extend({
     init: function() {
       this.LogicSystem('OutputTransform', TransformComponent);
       this.TransformSystem();
@@ -12,16 +13,20 @@ define([
       
     },
     
-    constructComponent: function(speedComp) {
-      return {speedComp: speedComp};
+    constructComponent: function() {
+      return {position: new Vector};
     },
     
     proccess: function(t, dt) {
-       for (var i = 0, component; component = this.components[i]; i++) {
-         var transformComp = component.speedComp.transformComp,
-             directionComp = component.speedComp.directionComp;
+       for (var i = 0, entity; entity = this.entities[i]; i++) {
+         var transformComp = entity.get('Transform'),
+             directionComp = entity.get('Direction'),
+             speedComp = entity.get('Speed'),
+             outputTransformComp = entity.get('OutputTransform'),
+             playerTimeComp = entity.get('PlayerTime'),
+             dt = dt * playerTimeComp.multiplier;
              
-         component.transformComp.position = transformComp.position.add(directionComp.direction.multiply(component.speed * dt));  
+         outputTransformComp.position = transformComp.position.add(directionComp.direction.multiply(speedComp.speed * dt));  
        };
     },
   });

@@ -13,7 +13,7 @@ define([
       
     },
     
-    constructComponent: function(pX, pY, rX, rY) {
+    component: function(pX, pY, rX, rY) {
       return {position: new Vector(pX || 0, pY || 0), rotation: new Vector(rX || 0, rY || 0)};
     },
 

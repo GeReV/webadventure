@@ -13,15 +13,15 @@ define([
       this.keyboardState = new KeyboardState();
     },
     
-    // keyBinds = {up: 'w', down: 's', left: 'a', right: 'd'};
-    constructComponent: function(directionComponent, keyBinds) {
-      return {directionComponent: directionComponent, keyBinds: keyBinds};
+    component: function(keyBinds) {
+      return {keyBinds: keyBinds || {up: 'Up', down: 'Down', left: 'Left', right: 'Right'}};
     },
     
-    proccess: function(t, dt) {
-      for (var i = 0, component; component = this.components[i]; i++) {
-        var diretion = component.directionComponent.diretion,
-            keyBinds = component.keyBinds;
+    proccess: function() {
+      for (var i = 0, entity; entity = this.entity[i]; i++) {
+        var diretionComp = entity.get('Diretion'),
+            direction = diretionComp.diretion;
+            keyBinds = entity.get('keyBinds');
          
         if(this.keyboardState.pressed(keyBinds.up))
           diretion.y = -1;
@@ -35,7 +35,7 @@ define([
         if(this.keyboardState.pressed(keyBinds.left))
           direction.x = 1;
           
-        component.directionComponent.diretion = direction.normilize();
+        diretionComp.diretion = direction.normilize();
       };
     },
   });

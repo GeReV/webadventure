@@ -6,16 +6,26 @@ define(['bootstrap', 'vendor/class', 'image'], function() {
         
     // constructor
     Core: function() {
+      this._run();
     },
     
     // used by system to initialize with some values
     params: {},
     
+    stateChange: new Event(),
+
+    setState: function(state, active) {
+      this._state[state] = active;
+      this.stateChange(state, this._state);
+    },
+    
     _outputSystems: [],
     
     _logicSystems: [],
     
-    systems: {},
+    _state: {},
+    
+    _systems: {},
     
     _outputAdd: function(sys) {
       this._outputSystems.push(sys);
@@ -37,10 +47,10 @@ define(['bootstrap', 'vendor/class', 'image'], function() {
     
     _proccess: function(systems, t, dt) {
       for(var i = 0, sys; sys = systems[i]; i++)
-        sys.proccess(t, dt);
+        sys.enabled && sys.proccess(t, dt); // proccess only if enabled
     },
         
-    run: function() {
+    _run: function() {
       var time = 0,
           deltaTime = 0.03; // update each interval in seconds,
           currentTime = window.perfNow() / 1000, // Maybe delegate this to an outer Timer class.
@@ -65,7 +75,7 @@ define(['bootstrap', 'vendor/class', 'image'], function() {
         accumulator += frameTime;
     
         while(accumulator >= deltaTime) {
-          this._proccessLogic(time, deltaTime);
+          this._proccessLogic(time, deltaTime); 
           
           time += deltaTime;
           accumulator -= deltaTime
@@ -77,7 +87,8 @@ define(['bootstrap', 'vendor/class', 'image'], function() {
       };
 
       window.requestAnimationFrame(frameUpdate);
-    }
+    },
+  
   });
   
   return new Core();

@@ -1,7 +1,6 @@
 define([
   'core/core',
-  'core/component', 
-  ], function(Core, Component) {
+  ], function(Core) {
   var System = Class.extend({
     init: function() {
     },
@@ -11,15 +10,31 @@ define([
     System: function(type) {
       this.core = Core;
       this.type = type;
-      this.components = [];
+      this.entities = {};
+      this.enabled = false;
+      
+      this.core.stateChange(function(state, states) {
+        this.enabled = false;
+        states.run && (this.enabled = true);
+      });
     },
     
-    // overides to construct system specific component
-    constructComponent: function() {},
+    component: function() {},
     
-    create: function() {
-      var component = this.constructComponent.apply(this, args);
-      this.components.push(component);
+    _addEntity: function(entity, args) {
+      var comp = this.component.apply(this, args);
+      entity.components[this.type] = comp;
+      this.entities[entitiy.id] = entitiy;
+      
+      return comp;
+    },
+    
+    _removeEntity: function() {
+      
+    },
+    
+    setState: function(state, active) { // TODO: make it like jQuery arguments ({ paused: true, minimized: true})
+      this.core._setState(state, active);
     },
     
     proccess: function(t, dt) { },

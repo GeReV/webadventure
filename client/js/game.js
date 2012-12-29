@@ -1,22 +1,27 @@
 // systems loading order is the same order they will be activated
 define([
   'core/core',
+  'util/resourcs/resourcemanager',
+  'systems/templates/playerentity', // think about a nice way to initialize the engine with templates
+  
+  // logic systems
+  'systems/logic/TimeSystem',
   'systems/logic/transformsystem',
   'systems/logic/directionsystem',
   'systems/logic/playerinputsystem',
   'systems/logic/speedsystem',
+  
+  // output systems
   'systems/output/outputtransformsystem',
   'systems/output/spriterendersystem',
-  
-  'systems/templates/playertemplate', // think about a nice way to initialize the engine with templates
-  ], function(Core, PlayerTemplate) {
+  ], function(Core, ResourceManager, PlayerEntity) {
   var Game = Class.extend({
     init: function() {
-      new PlayerAssemblage;
-    },
-    
-    run: function() {
-      Core.run();
+      new PlayerEntity;
+      
+      ResourceManager.onFinish(function() {
+        Core.setState('run', true);
+      }, this);
     },
     
     
@@ -160,5 +165,5 @@ define([
     */
   });
   
-  return Game;
+  return new Game();
 });

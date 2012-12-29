@@ -13,8 +13,8 @@ define([
       
     },
     
-    constructComponent: function(x, y) {
-      return {direction: new Vector(x || 0 , y || 0)};
+    component: function() {
+      return {direction: new Vector};
     },
   });
   

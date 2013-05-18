@@ -1,10 +1,15 @@
-define(['core/sprite'], function(Sprite) {
+define([
+    'core/sprite',
+    'core/vector',
+    'core/state'
+  ], function(Sprite, Vector, State) {
+    
   var Entity = Class.extend({
     init: function(game, sprite, x, y, width, height) {
       this.game = game;
       this.sprite = sprite;
       
-      this.direction = new Vector(0,0);
+      this.direction = new Vector;
       
       this.isCollidable = true;
       

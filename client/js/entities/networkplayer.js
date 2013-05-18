@@ -7,34 +7,10 @@ define([
   'entities/player'
   ], function(Keyboardhandler, Character, Sprite, Vector, State, Player) {
   var NetworkPlayer = Player.extend({
-    init: function(game, sprite, x, y, isAlive) {
-      this.game = game;
+    init: function(game, sprite, x, y, width, height, isAlive) {
+      this._super(game, sprite, x, y, width, height, isAlive);
       
-      this.sprite = sprite;
-      this.sprite.setAnimation('stand');
-      
-      this.width = sprite.width;
-      this.height = sprite.height;
-      
-      this.direction = new Vector(0,0);
-      
-      this.state = this.previousState = new State({
-        x: State.lerp(+x || 0),
-        y: State.lerp(+y || 0),
-        speed: State.snap(100)
-      });
-      
-      // chareacter
-      this.isAlive = isAlive || true;
-      
-      //player
-      this.keyBind = {up: 'w', down: 's', left: 'a', right: 'd'}
-      this.keyboardhandler = new Keyboardhandler([
-        this.keyBind.up,
-        this.keyBind.down,
-        this.keyBind.left,
-        this.keyBind.right
-      ]);
+      this.state.speed = this.previousState.speed = 100;
       
       // network player  
       this.userID = "";

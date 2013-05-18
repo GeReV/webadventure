@@ -6,22 +6,9 @@ define([
   ], function(Keyboardhandler, Character, Sprite, Vector) {
   var NetworkCharacter = Character.extend({
     init: function(game, sprite, x, y, width, height, isAlive, id ) {
-      this.game = game;
-      this.sprite = sprite;
+      this._super(game, sprite, x, y, width, height, isAlive);
       
-      this.width = +width || 0;
-      this.height = +height || 0;
-      
-      this.direction = new Vector(0,0);
-      
-      this.state = this.previousState = new State({
-        x: State.lerp(+x || 0),
-        y: State.lerp(+y || 0),
-        speed: State.snap(8)
-      });
-      
-      // chareacter
-      this.isAlive = isAlive;
+      this.state.speed = this.previousState.speed = 8;
       
       //network character     
       this.userId = id || '';

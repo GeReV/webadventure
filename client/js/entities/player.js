@@ -7,26 +7,13 @@ define([
   ], function(Keyboardhandler, Character, Sprite, Vector, State) {
   var Player = Character.extend({
     init: function(game, sprite, x, y, width, height, isAlive) {
-      this.game = game;
       
-      this.sprite = sprite;
+      this._super(game, sprite, x, y, width, height, isAlive);
+      
+      this.state.speed = this.previousState.speed = 100;
+      
       this.sprite.setAnimation('stand');
       
-      this.width = +width || 0;
-      this.height = +height || 0;
-      
-      this.direction = new Vector(0,0);
-      
-      this.state = this.previousState = new State({
-        x: State.lerp(+x || 0),
-        y: State.lerp(+y || 0),
-        speed: State.snap(160)
-      });
-      
-      // character
-      this.isAlive = isAlive;
-      
-      // player
       this.keyBind = {up: 'w', down: 's', left: 'a', right: 'd'}
       this.keyboardhandler = new Keyboardhandler([
         this.keyBind.up,

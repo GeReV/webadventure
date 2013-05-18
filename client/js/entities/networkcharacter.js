@@ -5,12 +5,12 @@ define([
   'core/vector'
   ], function(Keyboardhandler, Character, Sprite, Vector) {
   var NetworkCharacter = Character.extend({
-    init: function(game, sprite, x, y, isAlive, id ) {
+    init: function(game, sprite, x, y, width, height, isAlive, id ) {
       this.game = game;
       this.sprite = sprite;
       
-      this.width = sprite.width;
-      this.height = sprite.height;
+      this.width = +width || 0;
+      this.height = +height || 0;
       
       this.direction = new Vector(0,0);
       

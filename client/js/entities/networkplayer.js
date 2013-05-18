@@ -9,7 +9,9 @@ define([
   var NetworkPlayer = Player.extend({
     init: function(game, sprite, x, y, isAlive) {
       this.game = game;
+      
       this.sprite = sprite;
+      this.sprite.setAnimation('stand');
       
       this.width = sprite.width;
       this.height = sprite.height;
@@ -19,7 +21,7 @@ define([
       this.state = this.previousState = new State({
         x: State.lerp(+x || 0),
         y: State.lerp(+y || 0),
-        speed: State.snap(160)
+        speed: State.snap(100)
       });
       
       // chareacter

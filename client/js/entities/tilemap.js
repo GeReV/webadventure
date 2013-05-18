@@ -45,7 +45,7 @@ define([
       for (var i=0, l=images.length; i<l; i++) {
         var image = images[i];
         
-        this.sprites.push(new Sprite(image, 0, 0, this.tileWidth, this.tileHeight));
+        this.sprites.push(new Sprite(image, null));
       }
     },
     _initMap: function() {

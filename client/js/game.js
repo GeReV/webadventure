@@ -11,6 +11,7 @@ define([
   'entities/networkcharacter',
   'entities/networkplayer',
   ], function(Renderer, Physics, ResourceManager, Network, Entity, Viewport, Sprite, TileMap, Player, NetworkCharacter, NetworkPlayer) {
+  
   var Game = Class.extend({
     init: function() {
       var canvas = document.getElementById('canvas');
@@ -21,14 +22,15 @@ define([
     },
     
     _initAssets: function(callback) {
-      ResourceManager.add(['img/grass.png', 'img/rock.png', 'img/crono.png', 'img/friend.png'], callback.bind(this));
+      ResourceManager.add(['/img/grass.png', '/img/rock.png', '/img/friend.png', '/img/crono_sheet.png', '/img/crono_sheet.json'], callback.bind(this));
     },
     
     _initPlayer: function() {
-      var image = ResourceManager.get('crono.png'),
-          sprite = new Sprite(image, image.width, image.height);
+      var image = ResourceManager.get('crono_sheet.png'),
+          frames = ResourceManager.get('crono_sheet.json'),
+          sprite = new Sprite(image, frames);
       
-      this.player = new NetworkPlayer(this, sprite, 0, 0);
+      this.player = new NetworkPlayer(this, sprite, 0, 0, frames.stand[0][2], frames.stand[0][3]);
       this.entities.push(this.player);
     },
     

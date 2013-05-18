@@ -1,12 +1,15 @@
 define(['core/sprite'], function(Sprite) {
   var Entity = Class.extend({
-    init: function(game, sprite, x, y) {
+    init: function(game, sprite, x, y, width, height) {
       this.game = game;
       this.sprite = sprite;
       
       this.direction = new Vector(0,0);
       
       this.isCollidable = true;
+      
+      this.width = +width || 0;
+      this.height = +height || 0;
       
       this.state = this.previousState = new State({
         x: State.lerp(+x || 0),
@@ -64,7 +67,13 @@ define(['core/sprite'], function(Sprite) {
       renderer.render(this.sprite, state.x, state.y);
     },
     
-    update: function(physics, t, dt) {},
+    update: function(physics, t, dt) {
+      this.sprite.update(physics, t, dt);
+    },
+    
+    getFrame: function() {
+      return this.currentAnimation && this.currentAnimation.getFrame();
+    },
     
     translate: function() {}
     

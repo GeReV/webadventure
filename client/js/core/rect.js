@@ -1,4 +1,4 @@
-define(['core/vecotr'], function(Sprite) {
+define(['core/vector'], function(Vector) {
   var Rect = Class.extend({
     init: function(vector) {
       this.x = vector.x;

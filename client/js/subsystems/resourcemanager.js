@@ -12,25 +12,44 @@ define(function() {
     _getName: function(resource) {
       return resource.slice(resource.lastIndexOf('/') + 1);
     },
-    _load: function(resource, callback) {
-      var that = this;
+    _getExtension: function(resource) {
+      return /\.(\w+)$/i.exec(resource)[1];
+    },
+    _load: function(resources, callback) {
+      var that = this,
+          loaded = 0;
       
-      resource = [].concat(resource);
+      resources = [].concat(resources);
       
-      for (var i=0, l=resource.length; i<l; i++) {
-        resource[i] = 'image!' + resource[i];
-      }
-      
-      require(resource, function() {
-        for (var i=0, l=arguments.length; i<l; i++) {
-          var image = arguments[i];
-          that.resources[ that._getName(image.src) ] = image;
-        }
+      for (var i=0, l=resources.length; i<l; i++) {
+        (function(resourceName) {
+          var resource;
+          switch (that._getExtension(resourceName)) {
+            case 'gif':
+            case 'jpg':
+            case 'jpeg':
+            case 'png':
+              resource = 'image!' + resourceName;
+              break;
+            case 'json':
+              resource = 'json!' + resourceName;
+              break;
+          }
+          
+          require([resource], function() {
+            for (var i=0, l=arguments.length; i<l; i++) {
+              var object = arguments[i];
+              that.resources[ that._getName(resourceName) ] = object;
+              loaded++;
+            }
+            
+            if (callback && loaded === resources.length) {
+              callback.apply(that, arguments);
+            }
+          });
+        })(resources[i]);
         
-        if (callback) {
-          callback.apply(this, arguments);
-        }
-      });
+      }
     },
     add: function(resource, callback) {
       this._load(resource, callback);

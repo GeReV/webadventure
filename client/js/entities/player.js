@@ -30,17 +30,6 @@ define([
       this.previousState = this.state.clone();
       
       this.direction.zero();
-      
-      this.sprite.setAnimation('stand');
-            
-      if(inputs.keys[this.keyBind.up]) {
-        this.direction.y = -1;
-        this.sprite.setAnimation('walkback');
-      }
-      if(inputs.keys[this.keyBind.down]) {
-        this.direction.y = 1;
-        this.sprite.setAnimation('walk');
-      }
         
       if(inputs.keys[this.keyBind.right]) {
         this.direction.x = 1;
@@ -49,6 +38,20 @@ define([
       if(inputs.keys[this.keyBind.left]) {
         this.direction.x = -1;
         this.sprite.setAnimation('walkleft'); 
+      }
+      
+      if(inputs.keys[this.keyBind.up]) {
+        this.direction.y = -1;
+        
+        this.sprite.setAnimation('walkback');
+      }
+      if(inputs.keys[this.keyBind.down]) {
+        this.direction.y = 1;
+        this.sprite.setAnimation('walk');
+      }
+      
+      if (this.direction.isZero()) {
+        this.sprite.setAnimation('stand');
       }
       
       if(inputs.touch) {

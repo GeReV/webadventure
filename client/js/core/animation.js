@@ -5,7 +5,7 @@ define(function() {
       this.fps = +fps || 1;
       this.loopCount = +loopCount || Infinity;
       
-      this.animationStep = (reverseAnimation ? 1 : -1);
+      this.animationStep = (reverseAnimation ? -1 : 1);
       
       this.currentFrame = +firstFrame || 0;
       this.accumulator = 0;
@@ -50,27 +50,23 @@ define(function() {
       this.currentFrame = frame % this.frames.length;
     },
     
+    reset: function() {
+      this.setFrameIndex(0);
+    },
+    
     isLooping: function() {
-      return this.loopCount != 0;
+      return this.loopCount > 0;
     },
     
     finishedLoop: function() {
-      if (this.isLooping() && this.loopCount > 0) {
+      if (this.isLooping()) {
       	this.loopCount--;
       }
     }
   });
   
   Animation.buildAnimations = function(frames) {
-    var animations = {};
     
-    //frames.each(function(key, value) {
-    
-    for (key in frames) {
-      animations[key] = new Animation(frames[key], 5, false, 0);
-    }
-    
-    return animations;
   };
   
   return Animation;

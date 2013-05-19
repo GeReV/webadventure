@@ -1,7 +1,7 @@
 // TODO: change the array to vector
 define([
-    'core/animation'
-  ], function(Animation) {
+    'core/animationmanager'
+  ], function(AnimationManager) {
   
   var Sprite = Class.extend({
     init: function(img, frames, opacity) {
@@ -9,24 +9,23 @@ define([
       this.frames = frames;
       this.opacity = +opacity || 1;
       
-      this.animations = frames && Animation.buildAnimations(this.frames);
-      this.currentAnimation = null;
+      this.animationManager = new AnimationManager(this.frames);
     },
     
     update: function(physics, t, dt) {
-      this.currentAnimation && this.currentAnimation.update(physics, t, dt);
+      this.animationManager.update(physics, t, dt);
     },
     
     setAnimation: function(animation) {
-      this.currentAnimation = this.animations[animation];
+      this.animationManager.setAnimation(animation);
+    },
+    
+    whichAnimation: function() {
+      return this.animationManager.whichAnimation();
     },
     
     getFrame: function() {
-      if (this.currentAnimation) {
-        return this.currentAnimation.getFrame();
-      }
-      
-      return [0, 0, this.img.width, this.img.height];
+      return this.animationManager.getFrame() || [0, 0, this.img.width, this.img.height];
     },
     
     opacity: function(opacity) {

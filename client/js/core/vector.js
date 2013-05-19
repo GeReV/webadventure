@@ -24,6 +24,10 @@ define(function() {
       this.x = this.y = 0;
       
       return this;
+    },
+    
+    isZero: function() {
+      return this.x === 0 && this.y === 0;
     }
   });
   
